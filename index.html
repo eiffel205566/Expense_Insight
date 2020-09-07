@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Insight</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://kit.fontawesome.com/9ae1d035ad.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <nav class="header">
+    <div class="buger"></div>
+    <h3>Expense Insight</h3>
+  </nav>
+
+  <div class="main">
+    <aside>
+
+    </aside>
+
+    <div class="content">
+      <div class="content-1">
+        <p class="font-heading paddingTopBottom-20 marginLeft10">Insight For: <span id='date'></span></p>
+      </div>
+      <div class="content-2 marginLeft10 topBorder">
+        <p class="paragraph-1">Entering New Expense</p>
+        
+        <form class="content-2-input">
+          <p class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i></p>
+          <p class="input-section">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i></p>
+          <p class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i></p>
+        </form>
+      </div>
+      <div class="content-3 marginLeft10 paddingTopBottom-20">
+        <div id="display-submit" class="display">
+          
+          <div class="info-wrapper">
+            <h3 id="value-submit" class="value" data-value=22>22</h3>
+            <h6>Total Submitted</h6>
+          </div>
+    
+          <i class="fas fa-chart-bar fa-6x"></i>
+        </div>
+
+        <div id="display-uncategorized" class="display">
+          <div class="info-wrapper">
+            <h3 id="value-done" class="value" data-value=22>22</h3>
+            <h6>Total Categorized</h6>
+          </div>
+          <i class="far fa-check-square fa-6x"></i>
+        </div>
+        <div id="display-total" class="display">
+          <div class="info-wrapper">
+            <h3 id="value-todo" class="value" data-value=22>22</h3>
+            <h6>Uncategorized</h6>
+          </div>
+          <i class="far fa-list-alt fa-6x"></i>
+        </div>
+      </div>
+      
+      <div class="content-4 search topBorder marginLeft10 paddingTopBottom-20">
+        <p>From</p>
+        <i class="far fa-calendar-alt"><input class="content-4-input" type="date"></i>
+        
+        <p>To</p>
+        <i class="far fa-calendar-alt"><input class="content-4-input" type="date"></i>
+
+        <p>Expense Cate</p>
+        <div class="expense-dropdown">
+          <input class="content-4-input" type="text" placeholder="Choose the Category"></input>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <div id="refresh"><i class="fas fa-sync-alt"></i></div>
+      </div>
+      
+      <div class="content-5 topBorder marginLeft10 paddingAround-20 marginTop20">
+        <div class="content-5-header">
+          <p data-sort=''>ID <i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i> </p>
+          <p data-sort=''>Merchant<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p data-sort=''>Date<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p data-sort=''>Status<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p data-sort=''>Amount<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p>Action</p>
+        </div>
+        <ul class="indexedDb">
+          <li class="content-5-header">
+            <p class="content-5-content">0</p>
+            <p class="content-5-content">ABC Restaurant</p>
+            <p class="content-5-content">09/01/2020</p>
+            <p class="content-5-content">Entered</p>
+            <p class="content-5-content">9.00</p>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+ 
+  
+  
+  <script src="./main.js"></script>
+  <script src="./indexedDB.js"></script>
+  
+</body>
+</html>
+
+
+<!-- 
+      <div class="flex-categories marginTop20">
+      <div id="expense-cat-0" class="container">
+        <p class="expense-h">Uncategorized</p>
+        <div id="placeholder"></div>
+        <div
+          id="draggable-1"
+          class="draggable"
+          draggable="true"
+        >
+          Expense1 
+        </div>
+        
+        <div
+          id="draggable-2"
+          class="draggable"
+          draggable="true"
+        >
+          Expense2
+        </div>
+        
+        <div
+          id="draggable-3"
+          class="draggable"
+          draggable="true"
+        >
+          Expense3
+        </div>
+        <div
+          id="draggable-4"
+          class="draggable"
+          draggable="true"
+        >
+          Expense4
+        </div>
+      </div>
+    
+      <div id='expense-cat-1' class="container">
+        <p class="expense-h">Category #1</p>
+      </div>
+      
+      <div id='expense-cat-2' class="container">
+        <p class="expense-h">Category #2</p>
+      </div>
+      
+      <div id='expense-cat-3' class="container">
+        <p class="expense-h">Category #3</p>
+      </div>
+    </div>
+ -->

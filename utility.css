@@ -1,0 +1,80 @@
+:root {
+  --draggable-color: #4aae9b;
+  --category-color-odd: #9abd92;
+  --category-color-even: #f4f4f4;
+  --placeholder-color: #57d1bb;
+}
+
+#placeholder {
+  background: var(--placeholder-color);
+  font-weight: normal;
+  margin: 10px 0 10px 0;
+}
+
+.marginTop20 {
+  margin-top: 20px;
+}
+
+.paddingTopBottom-20 {
+  padding: 20px 0 20px 0;
+}
+
+.paddingAround-20 {
+  padding: 20px;
+}
+
+.marginLeft10 {
+  margin-left : 10px;
+}
+
+.font-heading {
+  font-size: 1.5rem;
+}
+
+.topBorder {
+  border-top: 3px solid #0EBFE9 ;
+}
+
+/* Draggable Container and elements */
+.flex-categories {
+
+  width: 1000px;
+  max-height: 80vh;
+  text-align: center;
+  color: black;
+  display: flex;
+  font-weight: bold;
+  /* max-width: 1000px; */
+   margin: 0 auto 0 auto;
+  /* margin-left: 400px;
+  margin-top: 20px;
+  padding: 0 100px 0 100px; */
+}
+
+.container {
+  min-height: 500px;
+  /* max-height: 1000px; */
+  text-align: center;
+  flex-basis: 100%;
+  flex-grow: 1;
+  padding: 10px; 
+  margin: 0 10px;
+  border: 1px solid #dfa612;
+  /* overflow: scroll; */
+}
+
+.draggable {
+  background: var(--draggable-color);
+  font-weight: normal;
+  margin: 10px 0 10px 0;
+  padding: 10px;
+  transition: all 0.5s;
+}
+
+.container:nth-child(2n-1) {
+  background: var(--category-color-odd);
+}
+
+.container:nth-child(2n) {
+  background: var(--category-color-even);
+}
