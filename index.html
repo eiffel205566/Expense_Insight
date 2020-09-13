@@ -27,9 +27,19 @@
         <p class="paragraph-1">Entering New Expense</p>
         
         <form class="content-2-input">
-          <p class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i></p>
-          <p class="input-section">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i></p>
-          <p class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i></p>
+          <p class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+            <span class="merchantDropdownList">
+                <!-- <li>123</li> -->
+            </span>
+          </p>
+          <p class="input-section">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+          </p>
+          
+          <p class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+          </p>
         </form>
       </div>
       <div class="content-3 marginLeft10 paddingTopBottom-20">
@@ -66,7 +76,7 @@
         <p>To</p>
         <i class="far fa-calendar-alt"><input class="content-4-input" type="date"></i>
 
-        <p>Expense Cate</p>
+        <p>Expense Category</p>
         <div class="expense-dropdown">
           <input class="content-4-input" type="text" placeholder="Choose the Category"></input>
           <i class="fas fa-chevron-down"></i>

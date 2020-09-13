@@ -10,6 +10,9 @@ elementEntrySubmit.innerHTML = 0;
 elementEntryDone.innerHTML = 0;
 elementEntryTodo.innerHTML = 0;
 
+let exclamations = document.querySelectorAll('.content-2-input .input-section .fa-exclamation-circle'); //all Exclamations
+let warnings  = document.querySelectorAll('.content .content-2 .content-2-input .input-section .warning'); //warning symbols
+
 let submitBtn = document.querySelector('.expense-submit');
 const form = document.querySelector('form');
 
@@ -70,17 +73,43 @@ window.onload = function() {
   function addData(e) {
     //prevent default, dont want form to be submit normally
     e.preventDefault();
-
-    //Any empty field will halt addData
+    
+    let dateInputInMs = new Date(dateInput.value).getTime();
+    let fields = [merchatInput.value, dateInput.value, amountInput.value]
+    /* 
+    Data Validation
+    1. Merchant Descrition: a. Special Char, b. Trim blank, c. null/ undefined
+    2. Expense Date: a. null/undefined, b. has to before or equal today
+    3. Expense Amount: just check emptyness 
+    */
     if (merchatInput.value && dateInput.value && amountInput.value) {
-      // console.log('Validating Data')
+      //all 3 fields are non empty, reset all warning and exclamation
+      fields.forEach((eachInput, index) => {
+        warnings[index].style.zIndex = -1;
+        exclamations[index].style.zIndex = -1;
+      })
+
     } else {
-      // console.log('Empty Data detected, not add');
+      
+      //Empty warning message
+      
+      for (let i = 0; i < fields.length; i++) {
+        if (!fields[i]) { //if input fields are empty
+          warnings[i].style.zIndex = 1;
+          exclamations[i].style.zIndex = 1;
+        }
+      };
+      
+      if (dateInputInMs > Date.now()) {
+        warnings[1].style.zIndex = 1;
+        warnings[1].innerText = "Please don't enter future expense"
+        exclamations[1].style.zIndex = 1;
+      }
       return;
     }
 
     //get info entered
-    let newInfo = { merchant: merchatInput.value, date: dateInput.value, status: "Uncategorized", amount: amountInput.value };
+    let newInfo = { merchant: whiteCharHandler(merchatInput.value), date: dateInput.value, status: "Uncategorized", amount: amountInput.value };
 
 
     //open a read/write db transaction, ready for adding the data;
@@ -116,11 +145,13 @@ window.onload = function() {
     let objectStore = db.transaction('expense_os').objectStore('expense_os');
 
     let countRequest = objectStore.count();
-
     countRequest.onsuccess = () => {
       console.log('Count request successful');
-      elementEntrySubmit.innerHTML = countRequest.result; //update number in content-3 blue box value
+      elementEntrySubmit.innerText = countRequest.result; //update number in content-3 blue box value
     }
+
+    //new experiment, try to query db to get all entries with 'uncategorized' for key: status
+    let uncategorizedExpCount = 0; 
 
     //has to delete the first entry? no idea why
     while (contentParent.firstChild) {
@@ -162,9 +193,19 @@ window.onload = function() {
         //Delete the entry
         p6.onclick = deleteData;
 
+        //increment uncategorized exp
+        // console.log(cursor.value.status);
+        if (cursor.value.status == 'Uncategorized') {
+          uncategorizedExpCount++
+        }
+
         //continue for next entry
         cursor.continue();
-      };
+      } else {
+        //update uncategorized expense count in orange box
+        elementEntryTodo.innerText = uncategorizedExpCount;
+        elementEntryDone.innerText = elementEntrySubmit.innerText - uncategorizedExpCount; 
+      }
     }
   };
 
@@ -188,4 +229,16 @@ window.onload = function() {
   }
 }
 
+//Utility function enforce no consecutive whitespace characters; 
+function whiteCharHandler(str) {
+  let regex = /\s{2}/g;
+  
+  while (str.trim().match(regex)) {
+    str = str.trim().replace(regex, ' ');
+  }
 
+  //finally replace all whitespace with ' ';
+  str.replace(/\s/g, ' ');
+
+  return str;
+}
