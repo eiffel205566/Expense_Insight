@@ -71,12 +71,6 @@ aside {
   position: relative;
 }
 
-/* when input are focused, get rid of  */
-/* 
-.content .content-2 .content-2-input .input-section input:focus {
-  border: 2px solid yellow;
-} */
-
 .content .content-2 .content-2-input .input-section:last-child {
   display: flex;
   justify-items: center;
@@ -152,19 +146,51 @@ aside {
   /* margin-left: calc(30%); */
 }
 
+.content .content-2 .content-2-input .input-section:first-child #input-merchant:focus + i + i + .warning + .merchantDropdownList{
+  display: flex;
+}
+
 .content .content-2 .content-2-input .input-section:nth-child(2) input{
-  margin-left: 60px;
- 
+  margin-left: 60px; 
 }
 
 .content .content-2 .content-2-input .input-section:nth-child(3) input{
-  margin-left: 44px;
+  margin-left: 45px;
 }
 
 .merchantDropdownList {
   position: absolute;
+  max-width: 300px;
+  background: var(--category-color-even);
+  z-index: 2;
+  display: none;
+  flex-direction: column;
+  left: 165.63px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--placeholder-color);
 }
 
+.merchantDropdownList:hover {
+  display: flex;
+}
+
+.merchantDropdownList div {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  border-bottom: 1px dotted var(--placeholder-color);
+  cursor: pointer;
+  transition: 0.2s all;
+}
+
+.merchantDropdownList div:hover {
+  background: var(--placeholder-color);
+}
+
+.merchantDropdownList div h4 {
+  font-weight: lighter;
+}
 
 
 /* Content-3 Class: display */

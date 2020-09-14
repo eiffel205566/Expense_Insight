@@ -27,19 +27,22 @@
         <p class="paragraph-1">Entering New Expense</p>
         
         <form class="content-2-input">
-          <p class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+          <div class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
             <span class="warning">Please fill out the field</span>
-            <span class="merchantDropdownList">
-                <!-- <li>123</li> -->
-            </span>
-          </p>
-          <p class="input-section">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <div class="merchantDropdownList">
+                <div class="merchant"><h4>Starbucks</h4></div>
+                <div class="merchant"><h4>Lululemon</h4></div>
+                <div class="merchant"><h4>Canadian Tire</h4></div>
+            </div>
+          </div>
+
+          <div class="input-section input-setction-2">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
             <span class="warning">Please fill out the field</span>
-          </p>
+          </div>
           
-          <p class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+          <div class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
             <span class="warning">Please fill out the field</span>
-          </p>
+          </div>
         </form>
       </div>
       <div class="content-3 marginLeft10 paddingTopBottom-20">
@@ -116,53 +119,3 @@
 </html>
 
 
-<!-- 
-      <div class="flex-categories marginTop20">
-      <div id="expense-cat-0" class="container">
-        <p class="expense-h">Uncategorized</p>
-        <div id="placeholder"></div>
-        <div
-          id="draggable-1"
-          class="draggable"
-          draggable="true"
-        >
-          Expense1 
-        </div>
-        
-        <div
-          id="draggable-2"
-          class="draggable"
-          draggable="true"
-        >
-          Expense2
-        </div>
-        
-        <div
-          id="draggable-3"
-          class="draggable"
-          draggable="true"
-        >
-          Expense3
-        </div>
-        <div
-          id="draggable-4"
-          class="draggable"
-          draggable="true"
-        >
-          Expense4
-        </div>
-      </div>
-    
-      <div id='expense-cat-1' class="container">
-        <p class="expense-h">Category #1</p>
-      </div>
-      
-      <div id='expense-cat-2' class="container">
-        <p class="expense-h">Category #2</p>
-      </div>
-      
-      <div id='expense-cat-3' class="container">
-        <p class="expense-h">Category #3</p>
-      </div>
-    </div>
- -->

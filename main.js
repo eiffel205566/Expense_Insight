@@ -8,6 +8,7 @@ let refresh = document.querySelector('#refresh');
 let refreshableContent = Array.from(document.querySelectorAll('.content-4-input'));
 let content5 = document.querySelector('.indexedDb');
 let content5TopElements = document.querySelectorAll('.content-5 .content-5-header p[data-sort]'); //Elements click to sort
+let merchants = document.querySelectorAll('.merchant');
 
 // let elementEntrySubmit = document.querySelector('#value-submit'); //display value
 // let elementEntryDone= document.querySelector('#value-done');
@@ -171,4 +172,9 @@ function sortNthListItems(n) {
   )
 };
 
-
+//click event on merchants dropdown
+merchants.forEach((merchantElement) => {
+  merchantElement.addEventListener('click', (event) => {
+    merchatInput.value = event.target.innerText;
+  })
+})
