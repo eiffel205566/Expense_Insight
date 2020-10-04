@@ -3,8 +3,9 @@ let links = Array.from(document.querySelectorAll('.innerselection > li > a[class
 let main = document.querySelector('.main');
 let dateElement = document.querySelector('#date');
 
-let date = new Date();
-dateLetterArr = date.toDateString().split("")
+
+export let date = new Date();
+export let dateLetterArr = date.toDateString().split("")
 // dateElement.innerHTML = date.toDateString();
 
 //burger menu animation
@@ -48,9 +49,54 @@ function deleteDate() {
 }
 
 
-let timeId = setInterval(() => {
-  delayPrintDate(dateLetterArr);
-  setTimeout(() => {
-    deleteDate()
-  }, 4000);
-}, 8000);
+let db;
+
+window.onload = function() {
+  
+  //print out date... for fun???
+  let timeId = setInterval(() => {
+    delayPrintDate(dateLetterArr);
+    setTimeout(() => {
+      deleteDate()
+    }, 4000);
+  }, 8000);
+  
+  //open database with version "2" so it will trigger onupgradeneeded event, so add another ObjectStore is possible
+  let request = window.indexedDB.open('expense_db', 1);
+  
+  //onerror
+  request.onerror = () => console.log('failed to load main database');
+  
+  //onsuccess
+  request.onsuccess = () => {
+    console.log('main database load complete');
+
+    //store opened database object
+    db = request.result; //has to let db in global as onupgradeneede runs before onsuccess
+
+
+    let objectStore = db.transaction('expense_os').objectStore('expense_os');
+    
+    //doesn't work
+    let objectStoreMeta = db.transaction('expense_mt').objectStore('expense_mt');
+    
+
+    let countRequest = objectStore.count();
+    countRequest.onsuccess = () => {
+      console.log('Count request successful');
+      console.log(`transactional: ${countRequest.result}`); //update number in content-3 blue box value
+    }
+
+
+    let countRequestMeta = objectStoreMeta.count();
+    countRequestMeta.onsuccess = () => {
+      console.log(`metadata: ${countRequestMeta.result}`)
+    }
+  }
+
+  request.onupgradeneeded = (e) => {
+    //a reference to the opened database;
+    let db = e.target.result; 
+    console.log('Database setup complete');
+  }
+}

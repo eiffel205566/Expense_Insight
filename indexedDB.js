@@ -27,9 +27,15 @@ const contentParent = document.querySelector('.indexedDb');
 //Merchant Dropdown list
 export let merchantsDropdown = document.querySelector('.merchantDropdownList');
 
-// // uncomment to reset by deleting the database
+// uncomment to reset by deleting the database
+
 // let requestDeleteAll = indexedDB.deleteDatabase('expense_db');
 // requestDeleteAll.onsuccess = () => {
+//   console.log('deleted');
+// };
+
+// let requestDeleteAll_2 = indexedDB.deleteDatabase('expense_mt');
+// requestDeleteAll_2.onsuccess = () => {
 //   console.log('deleted');
 // };
 
@@ -61,14 +67,18 @@ window.onload = function() {
 
     //create a table (called "object store"), the method is literally called createObjectStore
     let objectStore = db.createObjectStore('expense_os', { keyPath: 'id', autoIncrement: true });
-    
+        
     //Define what data items (metadata)
     objectStore.createIndex('merchant', 'merchant', { unique: false }); //merchant
     objectStore.createIndex('date', 'date', { unique: false }); //date
     objectStore.createIndex('status', 'status', { unique: false }); //status
     objectStore.createIndex('amount', 'amount', { unique: false }); //amount
-
-    console.log('Database setup complete');
+    
+    //Metadata table
+    let objectStoreMeta = db.createObjectStore('expense_mt', { keyPath: 'id', autoIncrement: true });
+    objectStoreMeta.createIndex('type', 'type', { unique: false }) //expense type
+    
+    console.log('2 Databases setup complete')
   }
 
   form.onsubmit = addData;

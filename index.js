@@ -1,7 +1,7 @@
 
-import {merchantInput} from './indexedDB.js';
-import {submitBtn} from './indexedDB.js';
-import {merchantsDropdown} from './indexedDB.js';
+// import {merchantInput} from './indexedDB.js';
+// import {submitBtn} from './indexedDB.js';
+// import {merchantsDropdown} from './indexedDB.js';
 
 let main = document.querySelector('.main');
 //let drags = Array.from(document.querySelectorAll('.draggable')); //All elements able to drag
@@ -91,13 +91,14 @@ function sortNthListItems(n) {
 burger.addEventListener("click", () => {
   if (Array.from(burger.classList).includes("open")) {
     burger.classList.remove("open");
-    main.classList.remove("open")
+    main.classList.remove("open");
     document.body.style.overflowY = "";
     links.forEach(element=>element.classList.remove('open'))
   } else {
-    burger.classList.add("open")
-    main.classList.add("open")
+    burger.classList.add("open");
+    main.classList.add("open");
     document.body.style.overflowY = "hidden";
     links.forEach(element=>element.classList.add('open'))
   }
 });
+
