@@ -39,15 +39,20 @@ toDo:
 
 1. Validation on all 6 input fields (x)
 2. Expense Category dropdown list
-3. side bar & hamburger menu on nav bar
+3. side bar & hamburger menu on nav bar (change to overlay)
 4. sorting functionality for all content-5 detail (x)
-5. drag/drop page 
+5. drag/drop page (change to overlay)
 6. content-3 dynamic data update (x)
 7. responsiveness of index.html
 8. sorting with date range on content-4 
 9. insight page with tree structure 
 10. Enter New Expense section had Merchant dropdown list added
 11. Dynamic update for Merchant dropdown list
+
+
+//Maybe add a "Category Management" page for metadata management, 
+//where we can use drag & drop
+
 
 
 

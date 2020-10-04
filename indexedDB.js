@@ -1,7 +1,7 @@
 //Polyfills??
-window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
-window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
+// window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+// window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
+// window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
 
 let elementEntrySubmit = document.querySelector('#value-submit'); //dynamic update
 let elementEntryDone= document.querySelector('#value-done');
@@ -13,16 +13,19 @@ elementEntryTodo.innerHTML = 0;
 let exclamations = document.querySelectorAll('.content-2-input .input-section .fa-exclamation-circle'); //all Exclamations
 let warnings  = document.querySelectorAll('.content .content-2 .content-2-input .input-section .warning'); //warning symbols
 
-let submitBtn = document.querySelector('.expense-submit');
+export let submitBtn = document.querySelector('.expense-submit');
 const form = document.querySelector('form');
 
 //3 input fields
-const merchatInput = document.querySelector('#input-merchant');
-const dateInput = document.querySelector('#input-date');
-const amountInput = document.querySelector('#input-amount');
+export const merchantInput = document.querySelector('#input-merchant');
+export const dateInput = document.querySelector('#input-date');
+export const amountInput = document.querySelector('#input-amount');
 
 //the ul we append detail li item to
 const contentParent = document.querySelector('.indexedDb');
+
+//Merchant Dropdown list
+export let merchantsDropdown = document.querySelector('.merchantDropdownList');
 
 // // uncomment to reset by deleting the database
 // let requestDeleteAll = indexedDB.deleteDatabase('expense_db');
@@ -75,14 +78,14 @@ window.onload = function() {
     e.preventDefault();
     
     let dateInputInMs = new Date(dateInput.value).getTime();
-    let fields = [merchatInput.value, dateInput.value, amountInput.value]
+    let fields = [merchantInput.value, dateInput.value, amountInput.value]
     /* 
     Data Validation
     1. Merchant Descrition: a. Special Char, b. Trim blank, c. null/ undefined
     2. Expense Date: a. null/undefined, b. has to before or equal today
     3. Expense Amount: just check emptyness 
     */
-    if (merchatInput.value && dateInput.value && amountInput.value) {
+    if (merchantInput.value && dateInput.value && amountInput.value) {
       //all 3 fields are non empty, reset all warning and exclamation
       fields.forEach((eachInput, index) => {
         warnings[index].style.zIndex = -1;
@@ -91,7 +94,7 @@ window.onload = function() {
 
     } else {
       
-      //Empty warning message
+      //Empty field warning message
       
       for (let i = 0; i < fields.length; i++) {
         if (!fields[i]) { //if input fields are empty
@@ -109,7 +112,7 @@ window.onload = function() {
     }
 
     //get info entered
-    let newInfo = { merchant: whiteCharHandler(merchatInput.value), date: dateInput.value, status: "Uncategorized", amount: amountInput.value };
+    let newInfo = { merchant: whiteCharHandler(merchantInput.value), date: dateInput.value, status: "Uncategorized", amount: amountInput.value };
 
 
     //open a read/write db transaction, ready for adding the data;
@@ -122,7 +125,7 @@ window.onload = function() {
     let request = objectStore.add(newInfo);
     request.onsuccess = () => {
       //clear the form
-      merchatInput.value = '';
+      merchantInput.value = '';
       dateInput.value = '';
       amountInput.value = '';
     };
@@ -152,6 +155,9 @@ window.onload = function() {
 
     //new experiment, try to query db to get all entries with 'uncategorized' for key: status
     let uncategorizedExpCount = 0; 
+
+    //merchant list dropdown??
+    let merchants = new Set();
 
     //has to delete the first entry? no idea why
     while (contentParent.firstChild) {
@@ -199,12 +205,33 @@ window.onload = function() {
           uncategorizedExpCount++
         }
 
+        //Merchant dropdown options, a Set
+        merchants.add(cursor.value.merchant);
+
         //continue for next entry
         cursor.continue();
       } else {
+        
         //update uncategorized expense count in orange box
         elementEntryTodo.innerText = uncategorizedExpCount;
-        elementEntryDone.innerText = elementEntrySubmit.innerText - uncategorizedExpCount; 
+        elementEntryDone.innerText = elementEntrySubmit.innerText - uncategorizedExpCount;
+
+        //rebuilding dropdown list, clear previous data always
+        merchantsDropdown.innerText = "";
+
+        //iterate cursor completes: update merchantsDropDownList
+        merchants = new Array(...merchants);
+        merchants.forEach(merchant => {
+          let merchantDiv = document.createElement("div");
+          merchantDiv.classList.add("merchant");
+          merchantDiv.innerHTML = `<h4>${merchant}</h4>`;
+          merchantsDropdown.append(merchantDiv);
+
+          //add click listener to fill in input when clicked
+          merchantDiv.addEventListener("click", (event) => {
+            merchantInput.value = event.target.innerText;
+          });
+        });
       }
     }
   };

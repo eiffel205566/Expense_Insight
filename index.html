@@ -10,15 +10,18 @@
 
 <body>
   <nav class="header">
-    <div class="buger"></div>
+    <div class='burger'>
+      <div class='burgerline'></div>
+    </div> 
     <h3>Expense Insight</h3>
   </nav>
 
+  <ul class="innerselection">
+    <li><a class="innerlink" href="">Home</a></li>
+    <li><a class="innerlink" href="./insight.html">Expense Management & Insight</a></li>
+  </ul>
+
   <div class="main">
-    <aside>
-
-    </aside>
-
     <div class="content">
       <div class="content-1">
         <p class="font-heading paddingTopBottom-20 marginLeft10">Insight For: <span id='date'></span></p>
@@ -30,9 +33,6 @@
           <div class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
             <span class="warning">Please fill out the field</span>
             <div class="merchantDropdownList">
-                <div class="merchant"><h4>Starbucks</h4></div>
-                <div class="merchant"><h4>Lululemon</h4></div>
-                <div class="merchant"><h4>Canadian Tire</h4></div>
             </div>
           </div>
 
@@ -109,12 +109,8 @@
       </div>
     </div>
   </div>
- 
-  
-  
-  <script src="./main.js"></script>
-  <script src="./indexedDB.js"></script>
-  
+  <script src="./index.js" type="module"></script>
+  <script src="./indexedDB.js" type="module"></script>
 </body>
 </html>
 
