@@ -6,6 +6,7 @@
   <title>Expense Insight</title>
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./utility.css">
+  <script src="https://kit.fontawesome.com/9ae1d035ad.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <nav class="header">
@@ -25,8 +26,63 @@
   </div>
 
   <div class="main insight">
-    <div class="metadata paddingTopBottom-20 marginLeft10 marginTop20" ></div>
-    <div class="insights paddingTopBottom-20 marginLeft10 marginTop20"></div>
+    <div class="metadata paddingTopBottom-20 marginLeft10 marginTop20" >
+      
+      <div class="metadataHeader paddingTopBottom-20"><h3>Expesena Rollup & Management</h3></div>
+
+      <div class="metadataContainer paddingTopBottom-20">
+        <div class="metaline">
+          <div class="verticle"></div>
+        </div>
+        
+        <div class="metatext">
+          <div class="metatextContainer">
+            <div class="metatextContent paddingTopBottom-10">
+              ---Total Expense
+            </div>
+            <!-- <div class="metatextContent paddingTopBottom-10" draggable="true">
+              ---Commute
+            </div>
+            <div class="metatextContent paddingTopBottom-10" draggable="true">
+              ---Groceries
+            </div>
+            <div class="metatextContent paddingTopBottom-10" draggable="true">
+              ---Phone Bill
+            </div>
+            <div class="metatextContent paddingTopBottom-10" draggable="true">
+              ---Ordered Food
+            </div>
+            <div class="metatextContent paddingTopBottom-10" draggable="true">
+              ---Car Insurance
+            </div> -->
+          </div>
+        </div>
+        
+        <div class="metadata_control">
+          <form class="metadata_input paddingAround-20">
+            <div class="input-section">Enter New Expense Type <input id="input-text" type="text" placeholder="Enter New Expense Type"><i class="fas fa-edit"></i>
+              <!-- <span class="warning">Please fill out the field</span> -->
+            </div>
+            <button class="meta-submit">Submit</button>
+          </form>
+
+          <div class="metaRemoveContainer paddingAround-20">
+            <i class="far fa-trash-alt fa-2x"></i>
+            <div class="metaDropoffWrapper">
+              <div class="dropoffHeader">Drop Off to Delete</div>
+              <div class="dropoff">
+                <div id="placeholder"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="insights paddingTopBottom-20 marginLeft10 marginTop20">
+
+
+    </div>
   </div>
 
 <script src="./insight.js" type="module"></script>

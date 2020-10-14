@@ -19,6 +19,10 @@
   padding: 20px 0 20px 0;
 }
 
+.paddingTopBottom-10 {
+  padding: 10px 0 10px 0;
+}
+
 .paddingAround-20 {
   padding: 20px;
 }

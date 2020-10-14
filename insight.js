@@ -2,7 +2,11 @@ let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
 let main = document.querySelector('.main');
 let dateElement = document.querySelector('#date');
-
+let dropOff = document.getElementsByClassName("dropoff")[0];
+const form = document.querySelector('form');
+let metaInput = document.querySelector('#input-text');
+let metaContainer = document.querySelector('.metatextContainer');
+let dropHeader = document.querySelector('.dropoffHeader');
 
 export let date = new Date();
 export let dateLetterArr = date.toDateString().split("")
@@ -49,6 +53,10 @@ function deleteDate() {
 }
 
 
+
+/* 
+Interation with Metadata IndexDB
+*/
 let db;
 
 window.onload = function() {
@@ -74,16 +82,10 @@ window.onload = function() {
     //store opened database object
     db = request.result; //has to let db in global as onupgradeneede runs before onsuccess
 
-
     let objectStore = db.transaction('expense_os').objectStore('expense_os');
-    
-    //doesn't work
     let objectStoreMeta = db.transaction('expense_mt').objectStore('expense_mt');
-    
-
     let countRequest = objectStore.count();
     countRequest.onsuccess = () => {
-      console.log('Count request successful');
       console.log(`transactional: ${countRequest.result}`); //update number in content-3 blue box value
     }
 
@@ -92,6 +94,8 @@ window.onload = function() {
     countRequestMeta.onsuccess = () => {
       console.log(`metadata: ${countRequestMeta.result}`)
     }
+
+    displayData();
   }
 
   request.onupgradeneeded = (e) => {
@@ -99,4 +103,153 @@ window.onload = function() {
     let db = e.target.result; 
     console.log('Database setup complete');
   }
+
+  form.onsubmit = addData;
+
+  function addData(e) {
+    //prevent default, dont want form to be submit normally
+    e.preventDefault();
+    let metaInputText = metaInput.value;
+
+    //test for emptyness
+    if (!metaInputText) {
+      return;
+    }
+    
+    //the new info
+    let newInfo = { type: metaInputText };
+
+    //open a read/write db tran
+    let transaction = db.transaction(['expense_mt'], 'readwrite');
+
+    let objectStore = transaction.objectStore('expense_mt');
+
+    let addRequest = objectStore.add(newInfo);
+
+    addRequest.onsuccess = () => {
+      metaInput.value = '';
+    };
+
+    transaction.oncomplete = () => {
+      console.log("Transaction complete: added data");
+      displayLastData();
+    }
+    
+    transaction.onerror = () => {
+      console.log('transaction adding data failed')
+    };
+  }
+
+  function displayData() {
+    //open db get reference to objectStore to metadata db 'expense_mt'
+    let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
+
+    //has to remove the first child... 
+    // while (metaContainer.firstChild) {
+    //   metaContainer.remove(metaContainer.firstChild);
+    // }
+
+    //open cursor to db
+    objectStore.openCursor().onsuccess = (e) => {
+      let cursor = e.target.result;
+
+      //iterate cursor and build the list
+      if (cursor) {
+        const div = document.createElement('div');
+        //add text
+        div.innerHTML = '---' + cursor.value.type;
+        div.classList.add("metatextContent")
+        div.classList.add("paddingTopBottom-10")
+        
+        div.setAttribute('data-id', cursor.value.id) //to facilitate deletion
+        div.setAttribute('draggable', "true");
+        
+        //set id so drag can setData and then delete can use ID to delete
+        div.setAttribute('id', cursor.value.id);
+
+        div.addEventListener('dragstart', event => {
+          event.currentTarget.style.opacity = '0.5';
+          event.dataTransfer.setData('text/plain', event.target.id);
+        })
+
+        div.addEventListener('dragend', event => {
+          event.currentTarget.style.opacity = '1';
+        })
+
+        metaContainer.appendChild(div);
+
+        cursor.continue();
+      }
+    }
+  }
+
+  function displayLastData() {
+    let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
+
+    let lastData,
+        lastId;
+
+    objectStore.openCursor().onsuccess = (e) => {
+      let cursor = e.target.result;
+
+      if (cursor) {
+        lastData = cursor.value.type;
+        lastId = cursor.value.id
+        cursor.continue();
+      } else {
+        //now curosr finished iteration
+        let div = document.createElement("div");
+        div.innerHTML = '---' + lastData;
+        div.classList.add("metatextContent")
+        div.classList.add("paddingTopBottom-10")
+        div.setAttribute('data-id', lastId) //to facilitate deletion
+        div.setAttribute('draggable', "true");
+
+
+        metaContainer.appendChild(div);
+      }
+    } 
+  }
+
+  dropOff.addEventListener("drop", (event) => {
+    let elementId = event.dataTransfer.getData('text');
+    dropHeader.style.transform = '';
+    deleteData(event, elementId);
+  })
+
+  function deleteData(event, idToDelete) {
+    
+    // console.log(idToDelete);
+
+    let transaction = db.transaction(['expense_mt'], 'readwrite');
+    let objectStore = transaction.objectStore('expense_mt');
+
+    let deleteRequest = objectStore.delete(+idToDelete);
+    deleteRequest.onerror = () => console.log('delete metadata failed')
+    transaction.oncomplete = () => console.log(`Expense Type with ID ${idToDelete} has been deleted`)
+  
+    metaContainer.removeChild(document.querySelector(`[data-id="${idToDelete}"]`))
+  }
 }
+
+/* 
+Deal with Drop off area
+*/
+
+//prevent default;
+dropOff.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  dropHeader.style.transform = 'scale(1.1)';
+})
+
+dropOff.addEventListener('dragleave', () => {
+  dropHeader.style.transform = '';
+});
+
+// dropOff.addEventListener('drop', (event) => {
+//   let elementId = event.dataTransfer.getData('text');
+//   console.log(event.target)
+//   dropHeader.style.transform = '';
+// })
+
+
