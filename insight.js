@@ -1,15 +1,17 @@
+import { dateLetterArr, deleteDate, delayPrintDate } from './utility.js';
+
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
 let main = document.querySelector('.main');
-let dateElement = document.querySelector('#date');
+
 let dropOff = document.getElementsByClassName("dropoff")[0];
 const form = document.querySelector('form');
 let metaInput = document.querySelector('#input-text');
 let metaContainer = document.querySelector('.metatextContainer');
 let dropHeader = document.querySelector('.dropoffHeader');
 
-export let date = new Date();
-export let dateLetterArr = date.toDateString().split("")
+//export let date = new Date();
+//export let dateLetterArr = date.toDateString().split("")
 // dateElement.innerHTML = date.toDateString();
 
 //burger menu animation
@@ -26,33 +28,6 @@ burger.addEventListener("click", () => {
     links.forEach(element=>element.classList.add('open'))
   }
 });
-
-function delayPrintDate(arr) {
-  let i = 0;
-  let timeId = setTimeout(function addLetter() {
-    // console.log(arr[i]);
-    dateElement.innerHTML += arr[i];
-    i++;
-    if (i == arr.length) {
-      clearTimeout(timeId)
-    } else {
-      timeId = setTimeout(addLetter, 200)  
-    }
-  },200);
-}
-  
-function deleteDate() {
-  let timeId = setTimeout(function deleteLetter() {
-    if (dateElement.innerHTML.length === 0) {
-      clearTimeout(timeId);
-    } else {
-      dateElement.innerHTML = dateElement.innerHTML.slice(0, dateElement.innerHTML.length - 1)         
-      timeId = setTimeout(deleteDate(), 100) 
-    }
-  }, 100)
-}
-
-
 
 /* 
 Interation with Metadata IndexDB
@@ -204,8 +179,14 @@ window.onload = function() {
         div.classList.add("paddingTopBottom-10")
         div.setAttribute('data-id', lastId) //to facilitate deletion
         div.setAttribute('draggable', "true");
+        div.addEventListener('dragstart', event => {
+          event.currentTarget.style.opacity = '0.5';
+          event.dataTransfer.setData('text/plain', lastId);
+        })
 
-
+        div.addEventListener('dragend', event => {
+          event.currentTarget.style.opacity = '1';
+        })
         metaContainer.appendChild(div);
       }
     } 
@@ -213,22 +194,19 @@ window.onload = function() {
 
   dropOff.addEventListener("drop", (event) => {
     let elementId = event.dataTransfer.getData('text');
+    // console.log(document.querySelector(`[data-id="${elementId}"]`));    
+    metaContainer.removeChild(document.querySelector(`[data-id="${elementId}"]`))
     dropHeader.style.transform = '';
     deleteData(event, elementId);
   })
 
   function deleteData(event, idToDelete) {
-    
     // console.log(idToDelete);
-
     let transaction = db.transaction(['expense_mt'], 'readwrite');
     let objectStore = transaction.objectStore('expense_mt');
-
     let deleteRequest = objectStore.delete(+idToDelete);
     deleteRequest.onerror = () => console.log('delete metadata failed')
     transaction.oncomplete = () => console.log(`Expense Type with ID ${idToDelete} has been deleted`)
-  
-    metaContainer.removeChild(document.querySelector(`[data-id="${idToDelete}"]`))
   }
 }
 
@@ -245,11 +223,5 @@ dropOff.addEventListener('dragover', (event) => {
 dropOff.addEventListener('dragleave', () => {
   dropHeader.style.transform = '';
 });
-
-// dropOff.addEventListener('drop', (event) => {
-//   let elementId = event.dataTransfer.getData('text');
-//   console.log(event.target)
-//   dropHeader.style.transform = '';
-// })
 
 
