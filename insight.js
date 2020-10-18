@@ -1,4 +1,4 @@
-import { dateLetterArr, deleteDate, delayPrintDate } from './utility.js';
+import { dateLetterArr, deleteDate, delayPrintDate, whiteCharHandler } from './utility.js';
 
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
@@ -92,7 +92,7 @@ window.onload = function() {
     }
     
     //the new info
-    let newInfo = { type: metaInputText };
+    let newInfo = { type: whiteCharHandler(metaInputText) };
 
     //open a read/write db tran
     let transaction = db.transaction(['expense_mt'], 'readwrite');

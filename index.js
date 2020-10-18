@@ -18,6 +18,7 @@ let content5TopElements = document.querySelectorAll('.content-5 .content-5-heade
 //let merchants = document.querySelectorAll('.merchant');
 export let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
+let expenseDropdown = Array.from(document.querySelectorAll(".indexedDb > .content-5-header > ul > li > i"));
 
 // let elementEntrySubmit = document.querySelector('#value-submit'); //display value
 // let elementEntryDone= document.querySelector('#value-done');
@@ -33,7 +34,9 @@ window.addEventListener('load', function() {
   }, 8000);
 });
 
-let totalSubmitCount = document.querySelector('.indexedDb').childElementCount;
+export let zz = 1;
+
+//let totalSubmitCount = document.querySelector('.indexedDb').childElementCount;
 // elementEntrySubmit.innerText = totalSubmitCount;
 
 //Dropdown
@@ -47,7 +50,11 @@ refresh.addEventListener('click', (event) => {
 //add event listener 
 content5TopElements.forEach(
   (element, index) => {
-    element.addEventListener('click', () => sortNthListItems(index + 1) )
+    //deleted 1st column, also status column need rework
+    //because it is no longer a simple p element
+    if (index != 2) {
+      element.addEventListener('click', () => sortNthListItems(index + 1) )
+    }
   }
 );
 
@@ -62,8 +69,8 @@ function sortNthListItems(n) {
 
   if (sortFlag) {
     //if sortFlag is empty, reverse order;
-    //column 2 & 4 & 3 are string, rest columns can be converted to number;
-    if (n === 2 || n === 4 || n === 3) {
+    //column 1 & 2 & 3 are string, rest columns can be converted to number;
+    if (n === 1 || n === 2 || n === 3) {
       sortFunction = (a, b) => (a.innerText > b.innerText ? 1 : -1);
     } else {
       sortFunction = (a, b) => (+a.innerText - +b.innerText);
@@ -74,7 +81,7 @@ function sortNthListItems(n) {
 
     //if sortFlag is not empty, change back to normal order
   } else { 
-      if (n === 2 || n === 4 || n === 3) {
+      if (n === 1 || n === 2 || n === 3) {
         sortFunction = (a, b) => (b.innerText > a.innerText ? 1 : -1);
       } else {
         sortFunction = (a, b) => (+b.innerText - +a.innerText);
@@ -110,4 +117,6 @@ burger.addEventListener("click", () => {
     links.forEach(element=>element.classList.add('open'))
   }
 });
+
+
 

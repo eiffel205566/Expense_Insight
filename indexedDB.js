@@ -3,6 +3,8 @@
 // window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 // window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
 
+import { whiteCharHandler } from './utility.js';
+
 let elementEntrySubmit = document.querySelector('#value-submit'); //dynamic update
 let elementEntryDone= document.querySelector('#value-done');
 let elementEntryTodo = document.querySelector('#value-todo');
@@ -41,6 +43,25 @@ export let merchantsDropdown = document.querySelector('.merchantDropdownList');
 
 let db;
 
+/* test */
+
+exclamations[0].addEventListener('click', function() {
+  let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
+  objectStore.openCursor().onsuccess = (e) => {
+    let cursor = e.target.result;
+
+    if (cursor) {
+      console.log(cursor.value.type)
+      cursor.continue();
+    }
+
+    console.log(document.querySelector('.content-5-header').childElementCount);
+  }
+})
+
+
+/* test */
+
 window.onload = function() {
 
   //create database if it does not exist by creating a "request object"
@@ -68,7 +89,7 @@ window.onload = function() {
     //create a table (called "object store"), the method is literally called createObjectStore
     let objectStore = db.createObjectStore('expense_os', { keyPath: 'id', autoIncrement: true });
         
-    //Define what data items (metadata)
+    //Define what data items (transactional data)
     objectStore.createIndex('merchant', 'merchant', { unique: false }); //merchant
     objectStore.createIndex('date', 'date', { unique: false }); //date
     objectStore.createIndex('status', 'status', { unique: false }); //status
@@ -153,96 +174,203 @@ window.onload = function() {
   }
 
   function displayData() {
-    
-    //Returns an IDBObjectStore in the transaction's scope
-    let objectStore = db.transaction('expense_os').objectStore('expense_os');
+    // // -- Metadata database
+    // /* 
+    // need to open cursor to expense_mt (metadata database)
+    // because that is what the expense type dropdown list attached to each chevron will be based on
+    // */
 
-    let countRequest = objectStore.count();
-    countRequest.onsuccess = () => {
-      console.log('Count request successful');
-      elementEntrySubmit.innerText = countRequest.result; //update number in content-3 blue box value
-    }
+    let transactionMeta = db.transaction('expense_mt')
+    let objectStoreMeta = transactionMeta.objectStore('expense_mt');
 
-    //new experiment, try to query db to get all entries with 'uncategorized' for key: status
-    let uncategorizedExpCount = 0; 
-
-    //merchant list dropdown??
-    let merchants = new Set();
-
-    //has to delete the first entry? no idea why
-    while (contentParent.firstChild) {
-      contentParent.removeChild(contentParent.firstChild);
-    }
-
-    objectStore.openCursor().onsuccess = (e) => {
-      //get a reference to the cursor
+    let expenseListArr = [];
+    objectStoreMeta.openCursor().onsuccess = (e) => {
       let cursor = e.target.result;
-      
-      //once iterate all items, cursor will become null hence false and stop running this block
+
+
       if (cursor) {
+        // console.log(cursor.value.type)
+        // let expenseItem = document.createElement('li');
+        // expenseItem.innerHTML = cursor.value.type
+        expenseListArr.push(cursor.value.type)
+        cursor.continue()
+      }
+    }
+
+    transactionMeta.oncomplete = () => {
+      
+    
+      // -- Metadata database end
+      //Returns an IDBObjectStore in the transaction's scope
+      let transaction = db.transaction('expense_os')
+
+      let objectStore = transaction.objectStore('expense_os');
+
+      let countRequest = objectStore.count();
+      countRequest.onsuccess = () => {
+        console.log('Count request successful');
+        elementEntrySubmit.innerText = countRequest.result; //update number in content-3 blue box value
+      }
+
+      //new experiment, try to query db to get all entries with 'uncategorized' for key: status
+      let uncategorizedExpCount = 0; 
+
+      //merchant list dropdown??
+      let merchants = new Set();
+
+      //has to delete the first entry? no idea why
+      while (contentParent.firstChild) {
+        contentParent.removeChild(contentParent.firstChild);
+      }
+
+      objectStore.openCursor().onsuccess = (e) => {
+        //get a reference to the cursor
+        let cursor = e.target.result;
         
-        const li = document.createElement('li');
-        const p1 = document.createElement('p'); //id
-        const p2 = document.createElement('p'); //merchant
-        const p3 = document.createElement('p'); //date
-        const p4 = document.createElement('p'); //status
-        const p5 = document.createElement('p'); //amount
-        const p6 = document.createElement('i'); //delete
+        //once iterate all items, cursor will become null hence false and stop running this block
+        if (cursor) {
+          
+          const li = document.createElement('li');
+          // const p1 = document.createElement('p'); //id
+          const p2 = document.createElement('p'); //merchant
+          const p3 = document.createElement('p'); //date
+          
+          //-- drop down text
+          // const p4 = document.createElement('p'); //status
+          const p4 = document.createElement('ul'); //status
+          //-- drop down text
 
-        //<i class="far fa-trash-alt"></i>
+          const p5 = document.createElement('p'); //amount
+          const p6 = document.createElement('i'); //delete
 
-        li.append(...[p1, p2, p3, p4, p5, p6]) //append all to li
-        contentParent.appendChild(li);
+          //<i class="far fa-trash-alt"></i>
 
-        p1.textContent = cursor.value.id;
-        p2.textContent = cursor.value.merchant;
-        p3.textContent = cursor.value.date;
-        p4.textContent = cursor.value.status;
-        p5.textContent = cursor.value.amount;
+          // li.append(...[p1, p2, p3, p4, p5, p6]) //append all to li (backup)
+          li.append(...[p2, p3, p4, p5, p6]) //append all to li
+          contentParent.appendChild(li);
 
-        p6.classList.add('far');
-        p6.classList.add('fa-trash-alt');
+          // p1.textContent = cursor.value.id;
+          p2.textContent = cursor.value.merchant;
+          p3.textContent = cursor.value.date;
+          
+          //-- drop down text
+          // p4.textContent = cursor.value.status;
+          //p4.innerHTML = `<li><i class="fas fa-chevron-down"></i>${cursor.value.status}</li><ul class='expenseList'><li>Uncategorized</li><li>${cursor.value.status}</li></ul>`
+          p4.innerHTML = `<li class="needborder"><i class="fas fa-chevron-down"></i>${cursor.value.status}</li><ul class='expenseList'></ul>`
 
-        li.setAttribute('data-id', cursor.value.id); // the id of list item, to facilitate deletion
-        li.classList.add('content-5-header'); //add css class for formatting
+          //-- drop down text0
+          
+          p5.textContent = cursor.value.amount;
 
-        //Delete the entry
-        p6.onclick = deleteData;
+          p6.classList.add('far');
+          p6.classList.add('fa-trash-alt');
 
-        //increment uncategorized exp
-        // console.log(cursor.value.status);
-        if (cursor.value.status == 'Uncategorized') {
-          uncategorizedExpCount++
-        }
+          li.setAttribute('data-id', cursor.value.id); // the id of list item, to facilitate deletion
+          li.classList.add('content-5-header'); //add css class for formatting
 
-        //Merchant dropdown options, a Set
-        merchants.add(cursor.value.merchant);
+          //Delete the entry
+          p6.onclick = deleteData;
 
-        //continue for next entry
-        cursor.continue();
-      } else {
-        
-        //update uncategorized expense count in orange box
-        elementEntryTodo.innerText = uncategorizedExpCount;
-        elementEntryDone.innerText = elementEntrySubmit.innerText - uncategorizedExpCount;
+          //increment uncategorized exp
+          // console.log(cursor.value.status);
+          if (cursor.value.status == 'Uncategorized') {
+            uncategorizedExpCount++
+          }
 
-        //rebuilding dropdown list, clear previous data always
-        merchantsDropdown.innerText = "";
+          //Merchant dropdown options, a Set
+          merchants.add(cursor.value.merchant);
 
-        //iterate cursor completes: update merchantsDropDownList
-        merchants = new Array(...merchants);
-        merchants.forEach(merchant => {
-          let merchantDiv = document.createElement("div");
-          merchantDiv.classList.add("merchant");
-          merchantDiv.innerHTML = `<h4>${merchant}</h4>`;
-          merchantsDropdown.append(merchantDiv);
+          //continue for next entry
+          cursor.continue();
+        } else {
+          
+          //update uncategorized expense count in orange box
+          elementEntryTodo.innerText = uncategorizedExpCount;
+          elementEntryDone.innerText = elementEntrySubmit.innerText - uncategorizedExpCount;
 
-          //add click listener to fill in input when clicked
-          merchantDiv.addEventListener("click", (event) => {
-            merchantInput.value = event.target.innerText;
+          //rebuilding dropdown list, clear previous data always
+          merchantsDropdown.innerText = "";
+
+          //iterate cursor completes: update merchantsDropDownList
+          merchants = new Array(...merchants);
+          merchants.forEach(merchant => {
+            let merchantDiv = document.createElement("div");
+            merchantDiv.classList.add("merchant");
+            merchantDiv.innerHTML = `<h4>${merchant}</h4>`;
+            merchantsDropdown.append(merchantDiv);
+
+            //add click listener to fill in input when clicked
+            merchantDiv.addEventListener("click", (event) => {
+              merchantInput.value = event.target.innerText;
+            });
           });
+        }
+      }
+
+      //after openCursor transaction on transaction db 
+      transaction.oncomplete = () => {
+        let expenseLists = document.querySelectorAll(".expenseList");
+        let chevrons = document.querySelectorAll("ul li i[class='fas fa-chevron-down']")
+
+        //add expense drop down list to each status
+        expenseLists.forEach(expenseList => {
+          expenseListArr.forEach(expenseType => {
+            let expenseListItem = document.createElement("li");
+            expenseListItem.innerText = expenseType;
+            expenseList.append(expenseListItem);
+          })
+        })
+
+        // console.log(expenseLists)
+        chevrons.forEach((chevron, index) => {
+          chevron.addEventListener('click', () => {
+            expenseLists.forEach(expenseList => {
+              expenseList.style.display = 'none';
+            });
+            expenseLists[index].style.display = 'block'
+
+            
+            expenseLists[index].addEventListener('mouseleave', function handleMouseleave(event) {
+              expenseLists[index].removeEventListener('mouseleave', handleMouseleave);
+              expenseLists[index].style.display = 'none';
+            })
+            
+            //process another transaction to handle click on expense type 
+            let expenseItems = expenseLists[index].querySelectorAll('li'); 
+            expenseItems.forEach(expenseItem => {
+              expenseItem.addEventListener('click', () => {
+                //update Status column
+                expenseItem.parentElement.previousElementSibling.childNodes[1].nodeValue = expenseItem.innerText
+                
+                
+                let transactionUpdate = db.transaction(['expense_os'], 'readwrite');
+                let objectStore = transactionUpdate.objectStore('expense_os');
+                
+                //dataId is the key in expense_os db that we want to update, has to convert to number
+                let dataId = +expenseItem.parentElement.parentElement.parentElement.getAttribute('data-id');
+                
+                
+                let objectStoreRetrieveRequest = objectStore.get(dataId);
+
+                objectStoreRetrieveRequest.onsuccess = () => {
+                  let expenseTransactionResult = objectStoreRetrieveRequest.result;
+                  expenseTransactionResult.status = expenseItem.innerText;
+                  
+                  let expenseUpdateRequest = objectStore.put(expenseTransactionResult);
+
+                  expenseUpdateRequest.onsuccess = () => {
+                    
+                  }
+                  
+                }
+                
+              })
+            })
+          })
+
         });
       }
+
     }
   };
 
@@ -261,21 +389,8 @@ window.onload = function() {
 
     transaction.oncomplete = () => {
       console.log(`Transaction with ${id} had been deleted`)
-
     }
+
+    displayData();
   }
-}
-
-//Utility function enforce no consecutive whitespace characters; 
-function whiteCharHandler(str) {
-  let regex = /\s{2}/g;
-  
-  while (str.trim().match(regex)) {
-    str = str.trim().replace(regex, ' ');
-  }
-
-  //finally replace all whitespace with ' ';
-  str.replace(/\s/g, ' ');
-
-  return str;
 }
