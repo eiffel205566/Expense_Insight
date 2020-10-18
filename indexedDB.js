@@ -71,14 +71,14 @@ window.onload = function() {
     let objectStore = db.createObjectStore('expense_os', { keyPath: 'id', autoIncrement: true });
         
     //Define what data items (transactional data)
-    objectStore.createIndex('merchant', 'merchant', { unique: false }); //merchant
+    objectStore.createIndex('merchant', 'merchant', { unique: true }); //merchant
     objectStore.createIndex('date', 'date', { unique: false }); //date
     objectStore.createIndex('status', 'status', { unique: false }); //status
     objectStore.createIndex('amount', 'amount', { unique: false }); //amount
     
     //Metadata table
     let objectStoreMeta = db.createObjectStore('expense_mt', { keyPath: 'id', autoIncrement: true });
-    objectStoreMeta.createIndex('type', 'type', { unique: false }) //expense type
+    objectStoreMeta.createIndex('type', 'type', { unique: true }) //expense type
     
     console.log('2 Databases setup complete')
   }
@@ -333,35 +333,27 @@ window.onload = function() {
                 //update Status column
                 expenseItem.parentElement.previousElementSibling.childNodes[1].nodeValue = expenseItem.innerText
                 
-                
                 let transactionUpdate = db.transaction(['expense_os'], 'readwrite');
                 let objectStore = transactionUpdate.objectStore('expense_os');
                 
                 //dataId is the key in expense_os db that we want to update, has to convert to number
                 let dataId = +expenseItem.parentElement.parentElement.parentElement.getAttribute('data-id');
                 
-                
                 let objectStoreRetrieveRequest = objectStore.get(dataId);
 
                 objectStoreRetrieveRequest.onsuccess = () => {
                   let expenseTransactionResult = objectStoreRetrieveRequest.result;
                   expenseTransactionResult.status = expenseItem.innerText;
-                  
                   let expenseUpdateRequest = objectStore.put(expenseTransactionResult);
-
                   expenseUpdateRequest.onsuccess = () => {
-                    
-                  }
-                  
-                }
-                
+                     
+                  } 
+                }    
               })
             })
           })
-
         });
       }
-
     }
   };
 

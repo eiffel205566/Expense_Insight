@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="./utility.css">
   <script src="https://kit.fontawesome.com/9ae1d035ad.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
 </head>
 <body>
   <nav class="header">
@@ -69,11 +70,12 @@
 
     </div>
     <div class="insights paddingTopBottom-20 marginLeft10 marginTop20">
-
+      <canvas class='paddingAround-5' id="myChart" width="300" height="300"></canvas>
 
     </div>
   </div>
 
 <script src="./insight.js" type="module"></script>
+<script src="./visual.js" type="module"></script>
 </body>
 </html>

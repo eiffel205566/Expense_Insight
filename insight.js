@@ -34,7 +34,7 @@ Interation with Metadata IndexDB
 */
 let db;
 
-window.onload = function() {
+window.onload = async function run() {
   
   //print out date... for fun???
   let timeId = setInterval(() => {
@@ -94,25 +94,51 @@ window.onload = function() {
     //the new info
     let newInfo = { type: whiteCharHandler(metaInputText) };
 
-    //open a read/write db tran
-    let transaction = db.transaction(['expense_mt'], 'readwrite');
+    //has to opencursor to make sure no duplicated value been entered
+    let checkTransaction = db.transaction('expense_mt');
+    let objectStoreCheck = checkTransaction.objectStore('expense_mt');
+    let duplicate;
 
-    let objectStore = transaction.objectStore('expense_mt');
+    objectStoreCheck.openCursor().onsuccess = (e) => {
+      let cursor = e.target.result;
+      
+      if (cursor) {
 
-    let addRequest = objectStore.add(newInfo);
+        if (cursor.value.type.toUpperCase() === whiteCharHandler(metaInputText)?.toUpperCase()) {
+          alert("Please do not enter duplicated expense type");
+          duplicate = 1;
+        }
+        cursor.continue()
+      }
+    }
 
-    addRequest.onsuccess = () => {
-      metaInput.value = '';
-    };
-
-    transaction.oncomplete = () => {
-      console.log("Transaction complete: added data");
-      displayLastData();
+    checkTransaction.onerror = () => {
+      console.log('fail to add')
     }
     
-    transaction.onerror = () => {
-      console.log('transaction adding data failed')
-    };
+    checkTransaction.oncomplete = () => {
+      if (!duplicate) {
+        //open a read/write db tran
+        let transaction = db.transaction(['expense_mt'], 'readwrite');
+    
+        let objectStore = transaction.objectStore('expense_mt');
+    
+        let addRequest = objectStore.add(newInfo);
+    
+        addRequest.onsuccess = () => {
+          metaInput.value = '';
+        };
+    
+        transaction.oncomplete = () => {
+          console.log("Transaction complete: added data");
+          displayLastData();
+        }
+        
+        transaction.onerror = () => {
+          console.log('transaction adding data failed')
+        };
+      }
+    }
   }
 
   function displayData() {
@@ -195,18 +221,44 @@ window.onload = function() {
   dropOff.addEventListener("drop", (event) => {
     let elementId = event.dataTransfer.getData('text');
     // console.log(document.querySelector(`[data-id="${elementId}"]`));    
+    
+    let dataToDelete = document.querySelector(`[data-id="${elementId}"]`).textContent.slice(3,) //the expense type to be delete
+    
     metaContainer.removeChild(document.querySelector(`[data-id="${elementId}"]`))
     dropHeader.style.transform = '';
-    deleteData(event, elementId);
+    deleteData(event, elementId, dataToDelete);
   })
 
-  function deleteData(event, idToDelete) {
+  function deleteData(event, idToDelete, dataToDelete) {
+
     // console.log(idToDelete);
     let transaction = db.transaction(['expense_mt'], 'readwrite');
     let objectStore = transaction.objectStore('expense_mt');
     let deleteRequest = objectStore.delete(+idToDelete);
     deleteRequest.onerror = () => console.log('delete metadata failed')
-    transaction.oncomplete = () => console.log(`Expense Type with ID ${idToDelete} has been deleted`)
+    
+    //transaction that deletes meta data needs to update all transaction
+    transaction.oncomplete = () => {
+      console.log(`Expense Type with ID ${idToDelete} has been deleted`)
+      
+      let updateTransactionDataRequest = db.transaction(['expense_os'], 'readwrite');
+      let objectStore = updateTransactionDataRequest.objectStore('expense_os');
+      
+      //iterate each transaction in expense_os db and update "status" to Uncategorized
+      objectStore.openCursor().onsuccess = (event) => {
+        let cursor = event.target.result;
+        if (cursor) {
+          if (cursor.value.status === dataToDelete) {
+            let updateData = cursor.value;
+            updateData.status = "Uncategorized";
+            let updateRequest = cursor.update(updateData);
+
+            updateRequest.onsuccess = () => console.log(`All Transaction with ${dataToDelete} updated`)
+          }
+          cursor.continue();
+        }
+      }
+    } 
   }
 }
 
