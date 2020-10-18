@@ -468,10 +468,6 @@ body {
   margin-left: 10px;
 }
 
-/* .content-5 .content-5-header p:hover {
-  cursor: pointer;
-} */
-
 .content-5 .content-5-header p,
 .content-5 .content-5-header p + i {
   display: flex;
@@ -486,22 +482,7 @@ body {
   cursor: pointer;
 }
 
-
-/* .indexedDb .content-5-header ul li:nth-child(1) {
-  color: red;
-  display: block;
-  position: inherit;
-  height: 40px;
-  background: none;
-} */
-
-/* .indexedDb > .content-5-header > ul {
-  height: 38px;
-} */
-
 .indexedDb > .content-5-header > ul > li {
-  /* color: red;
-  background: #6fd8c5; */
   border-bottom: 1px solid #fff;
   text-align: center;
   height: 100%;
@@ -522,7 +503,12 @@ body {
   text-align: center;
   position: absolute;
   background: var(--category-color-even);
-  display: none;
+  display: block !important;
+  /* instead of diplsy:none and display:block when chevron is click */
+  /* do z-index:-1 and opacity:0 and pointer-events:none so the page doesn't jump */
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .indexedDb > .content-5-header > ul > .needborder {
@@ -558,7 +544,7 @@ body {
 }
 
 .nonselect {
-  cursor: default !important; 
+  cursor: not-allowed !important; 
 }
 
 
@@ -615,7 +601,9 @@ body {
 }
 
 .metatext .metatextContainer .metatextContent {
+  background: #a0d1c8;
   cursor: grab;
+  border: 1px dotted var(--placeholder-color);
   /* background: var(--category-color-even); */
 }
 

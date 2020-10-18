@@ -43,25 +43,6 @@ export let merchantsDropdown = document.querySelector('.merchantDropdownList');
 
 let db;
 
-/* test */
-
-exclamations[0].addEventListener('click', function() {
-  let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
-  objectStore.openCursor().onsuccess = (e) => {
-    let cursor = e.target.result;
-
-    if (cursor) {
-      console.log(cursor.value.type)
-      cursor.continue();
-    }
-
-    console.log(document.querySelector('.content-5-header').childElementCount);
-  }
-})
-
-
-/* test */
-
 window.onload = function() {
 
   //create database if it does not exist by creating a "request object"
@@ -325,14 +306,24 @@ window.onload = function() {
         chevrons.forEach((chevron, index) => {
           chevron.addEventListener('click', () => {
             expenseLists.forEach(expenseList => {
-              expenseList.style.display = 'none';
+              // expenseList.style.display = 'none';
+              expenseList.style.zIndex = -1;
+              expenseList.style.opacity = '0';
+              expenseList.style.pointerEvents  = 'none';
+              
             });
-            expenseLists[index].style.display = 'block'
-
+            // expenseLists[index].style.display = 'block'
+            expenseLists[index].style.zIndex = 1;
+            expenseLists[index].style.opacity = '1';
+            expenseLists[index].style.pointerEvents  = 'all';
+            
             
             expenseLists[index].addEventListener('mouseleave', function handleMouseleave(event) {
               expenseLists[index].removeEventListener('mouseleave', handleMouseleave);
-              expenseLists[index].style.display = 'none';
+              // expenseLists[index].style.display = 'none';
+              expenseLists[index].style.zIndex = -1;
+              expenseLists[index].style.opacity = '0';
+              expenseLists[index].style.pointerEvents  = 'none';
             })
             
             //process another transaction to handle click on expense type 
