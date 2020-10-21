@@ -43,3 +43,24 @@ export function whiteCharHandler(str) {
 
   return str;
 }
+
+//Utility function to extract nth element from each index of an array
+export function extractNthItem(arr, index) {
+  return arr.map(item => item[index])
+}
+
+//utility function to sum up values base on criteria
+//example: sum expense by expense type
+export function sumByCriteria(allData, criteriaList) {
+  //obj containing each key in criteriaList with value of 0
+  //to facilitate summarization
+  let summaryObj = criteriaList.reduce((prev, curr) => {
+    return {...prev, [curr]:0} 
+  }, {});
+
+  for (let transaction of allData) {
+    summaryObj[transaction.status] += transaction.amount
+  }
+
+  return Object.values(summaryObj);
+}

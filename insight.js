@@ -1,4 +1,4 @@
-import { dateLetterArr, deleteDate, delayPrintDate, whiteCharHandler } from './utility.js';
+import { dateLetterArr, deleteDate, delayPrintDate, whiteCharHandler, extractNthItem, sumByCriteria } from './utility.js';
 
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
@@ -9,7 +9,8 @@ const form = document.querySelector('form');
 let metaInput = document.querySelector('#input-text');
 let metaContainer = document.querySelector('.metatextContainer');
 let dropHeader = document.querySelector('.dropoffHeader');
-
+let button = document.querySelector('.meta-submit');
+let ctx = document.getElementById('myChart');
 //export let date = new Date();
 //export let dateLetterArr = date.toDateString().split("")
 // dateElement.innerHTML = date.toDateString();
@@ -143,7 +144,8 @@ window.onload = async function run() {
 
   function displayData() {
     //open db get reference to objectStore to metadata db 'expense_mt'
-    let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
+    let transaction = db.transaction('expense_mt')
+    let objectStore = transaction.objectStore('expense_mt');
 
     //has to remove the first child... 
     // while (metaContainer.firstChild) {
@@ -182,10 +184,16 @@ window.onload = async function run() {
         cursor.continue();
       }
     }
+
+    //render charts on initial load
+    transaction.oncomplete = () => {
+      renderCharts();
+    }
   }
 
   function displayLastData() {
-    let objectStore = db.transaction('expense_mt').objectStore('expense_mt');
+    let transaction = db.transaction('expense_mt');
+    let objectStore = transaction.objectStore('expense_mt');
 
     let lastData,
         lastId;
@@ -215,8 +223,13 @@ window.onload = async function run() {
         })
         metaContainer.appendChild(div);
       }
-    } 
-  }
+    }
+
+    //when adding new data
+    transaction.oncomplete = () => {
+      renderCharts()
+    }
+  };
 
   dropOff.addEventListener("drop", (event) => {
     let elementId = event.dataTransfer.getData('text');
@@ -226,39 +239,48 @@ window.onload = async function run() {
     
     metaContainer.removeChild(document.querySelector(`[data-id="${elementId}"]`))
     dropHeader.style.transform = '';
-    deleteData(event, elementId, dataToDelete);
+    deleteData(event, elementId, dataToDelete)
+
   })
 
-  function deleteData(event, idToDelete, dataToDelete) {
+function deleteData(event, idToDelete, dataToDelete) {
 
-    // console.log(idToDelete);
-    let transaction = db.transaction(['expense_mt'], 'readwrite');
-    let objectStore = transaction.objectStore('expense_mt');
-    let deleteRequest = objectStore.delete(+idToDelete);
-    deleteRequest.onerror = () => console.log('delete metadata failed')
-    
-    //transaction that deletes meta data needs to update all transaction
-    transaction.oncomplete = () => {
-      console.log(`Expense Type with ID ${idToDelete} has been deleted`)
+    return new Promise((resolve, reject) => {
+      // console.log(idToDelete);
+      let transaction = db.transaction(['expense_mt'], 'readwrite'); //initial request to delete in database
+      let objectStore = transaction.objectStore('expense_mt');
+      let deleteRequest = objectStore.delete(+idToDelete);
+      deleteRequest.onerror = () => console.log('delete metadata failed')
       
-      let updateTransactionDataRequest = db.transaction(['expense_os'], 'readwrite');
-      let objectStore = updateTransactionDataRequest.objectStore('expense_os');
-      
-      //iterate each transaction in expense_os db and update "status" to Uncategorized
-      objectStore.openCursor().onsuccess = (event) => {
-        let cursor = event.target.result;
-        if (cursor) {
-          if (cursor.value.status === dataToDelete) {
-            let updateData = cursor.value;
-            updateData.status = "Uncategorized";
-            let updateRequest = cursor.update(updateData);
+      //transaction that deletes meta data needs to update all transaction
+      transaction.oncomplete = () => {
+        console.log(`Expense Type with ID ${idToDelete} has been deleted`)
+        
+        let updateTransactionDataRequest = db.transaction(['expense_os'], 'readwrite'); //another request to open cursor
+        let objectStore = updateTransactionDataRequest.objectStore('expense_os');
+        
+        //iterate each transaction in expense_os db and update "status" to Uncategorized
+        objectStore.openCursor().onsuccess = (event) => {
+          let cursor = event.target.result;
+          if (cursor) {
+            if (cursor.value.status === dataToDelete) {
+              let updateData = cursor.value;
+              updateData.status = "Uncategorized";
+              let updateRequest = cursor.update(updateData);
 
-            updateRequest.onsuccess = () => console.log(`All Transaction with ${dataToDelete} updated`)
+              updateRequest.onsuccess = () => console.log(`All Transaction with ${dataToDelete} updated`)
+            }
+            cursor.continue();
           }
-          cursor.continue();
+        };
+
+        //once the request to iterator all cursor item and replaced all deleted value with "Categorized"
+        //re-render charts with new information
+        updateTransactionDataRequest.oncomplete = () => {
+          renderCharts()
         }
-      }
-    } 
+      };
+    })
   }
 }
 
@@ -277,3 +299,118 @@ dropOff.addEventListener('dragleave', () => {
 });
 
 
+function renderCharts() {
+
+  //open expense item (transactional) db and resolve the db
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      let request = window.indexedDB.open('expense_db', 1);
+      request.onsuccess = (event) => {
+        db = event.target.result;
+        resolve(db);
+      };
+      
+      request.onerror = () => console.log('fail to open')
+    })
+  };
+  
+  //chain then the db, and iterate cursor to get all raw data to be put in charts
+  openDB().then(
+    db => {
+      return new Promise(resolve => {
+        let transaction = db.transaction('expense_os')
+        let objectStore = transaction.objectStore('expense_os');
+        let allData = new Array();
+        let merchantList = new Set(); 
+        objectStore.openCursor().onsuccess = (e) => {
+          let cursor = e.target.result;
+  
+          if (cursor) {
+            //console.log(`${cursor.value.merchant}, ${cursor.value.status}, ${cursor.value.amount}, ${cursor.value.date}`)
+            allData.push([cursor.value.merchant, cursor.value.status, cursor.value.amount, cursor.value.date])
+            merchantList.add(cursor.value.merchant)
+            cursor.continue();
+          }
+        };
+  
+        transaction.oncomplete = () => {
+          resolve([db, allData, merchantList])
+        }
+      })
+    }
+  ).then(([db, allData, merchantList]) => { //then db again to get expense type list 
+    // console.log(db)
+    // console.log(allData)
+    // console.log(merchantList)
+    let expenseTypeList = new Array;
+
+    return new Promise((resolve, reject) => {
+      let expenseTypeRequest = db.transaction('expense_mt');
+      let objectStore = expenseTypeRequest.objectStore("expense_mt");
+
+      objectStore.openCursor().onsuccess = (e) => {
+        let cursor = e.target.result;
+        if (cursor) {
+          expenseTypeList.push(cursor.value.type)
+          cursor.continue();
+        }
+      }
+
+      expenseTypeRequest.oncomplete = () => {
+        //up-to-date expense types in an arr, all expense item, and merchant list
+        resolve([expenseTypeList, allData, merchantList])
+      }
+    })
+  }).then(([expenseTypeList, allData, merchantList]) => {
+    let obj = expenseTypeList.reduce((prev, curr) => {
+      return {...prev, [curr]:0} 
+    }, {});
+
+    for (let each of allData) {
+      obj[each[1]] += +each[2];  
+    }
+
+    for (let key in obj) {
+      obj[key] = parseFloat(obj[key].toFixed(2));
+    }
+    
+    console.log(expenseTypeList)
+    let myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: [...expenseTypeList],
+          datasets: [{
+              label: '$$',
+              data: [...Object.values(obj)],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+    });
+
+  })
+}

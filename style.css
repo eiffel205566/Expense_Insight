@@ -555,7 +555,7 @@ body {
 
 .main.insight .metadata,
 .main.insight .insights {
-  width: 35vw;
+  width: 40vw;
   height: 80vh;
   border: 1px solid var(--category-color-odd);
   border-radius: 5px;
@@ -606,6 +606,10 @@ body {
   border: 1px dotted var(--placeholder-color);
   /* background: var(--category-color-even); */
 }
+
+/* .metadata_control .metadata_input .input-section {
+  text-align: center;
+} */
 
 .metadata_control .metadata_input .input-section #input-text {
   margin: 5px 5px 5px 0;
@@ -662,4 +666,9 @@ body {
 
 .metadata_control .metaRemoveContainer .metaDropoffWrapper .dropoffHeader {
   transition: 0.2s all;
+  text-align: center;
+}
+
+#myChart {
+  max-height: 100%;
 }
