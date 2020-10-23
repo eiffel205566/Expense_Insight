@@ -568,6 +568,7 @@ body {
 }
 
 .metadata .metadataHeader {
+  color: var(--draggable-color);
   text-align: center;
   border-bottom: dotted 1px #333;
 }
@@ -669,6 +670,127 @@ body {
   text-align: center;
 }
 
-#myChart {
-  max-height: 100%;
+.insights {
+  position: relative;
+}
+
+.insights .chartContainer {
+  display: none;
+}
+
+.insights .arrowContainer {
+  position: relative;
+  max-width: 100px;
+  
+}
+ 
+.insights .arrowContainer .fas {
+  position: relative;
+  left:30px;
+  /* padding-left: 20px; */
+  color: var(--draggable-color);
+  transition: 1s all;
+}
+
+.insights .arrowContainer:hover {
+  cursor: pointer;
+  animation: moveLeft 1s infinite;
+  /* background:white; */
+}
+
+@keyframes moveLeft {
+  from {left: 50px;}
+  to {left: 0px; opacity: 0.1;}
+} 
+
+.blocker {
+  position: absolute;
+  height: 100px;
+  width: 50px;
+  z-index: 1;
+  opacity: 0;
+  background:yellow;
+}
+
+.insights .graphUI {
+  width: 80%;
+  height: 70%;
+  /* border: 1px solid red; */
+  margin-left: 10%;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.insights .graphUI .barContainer,
+.insights .graphUI .pieContainer {
+  border: 1px solid var(--category-color-odd);
+  border-radius: 5px;
+  max-height: 60%;
+  flex-grow: 1;
+  margin: 5px;
+  transition: 0.5s all;
+  box-shadow: none;
+  position: relative;
+  top: 0px;
+  width: fit-content;
+  display: none;
+}
+
+.insights .graphUI .barContainer:hover,
+.insights .graphUI .pieContainer:hover {
+  /* box-shadow: 1px 1px 2px 2px var(--category-color-odd); */
+  box-shadow: 0 0 0 1px var(--category-color-odd);
+  top:-2px;
+  cursor: pointer;
+}
+
+.insights .graphUI .barContainer i, 
+.insights .graphUI .pieContainer i {
+  color: var(--draggable-color);
+}
+
+.insights .graphUI p {
+  font-size: 0.9rem;
+}
+
+.uiDetail {
+  width: 100%;
+}
+
+.uiDetail .insightDateOption {
+  display: flex;
+  flex-direction: column;
+} 
+
+.uiDetail .insightDateOption .dateOptionHeader {
+  text-align: center;
+  color: var(--draggable-color);
+}
+
+.uiDetail .insightDateOption .insightDateInputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.uiDetail .insightDateOption .insightDateInputs input {
+  max-width: 80%;
+}
+
+.uiDetail .insightDateOption .insightDateInputs .dateInputFrom,
+.uiDetail .insightDateOption .insightDateInputs .dateInputTo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.uiDetail .insightDateOption .insightDateInputs .dateInputTo *,
+.uiDetail .insightDateOption .insightDateInputs .dateInputFrom * {
+  flex-grow: 1;
+}
+
+.uiDetail .insightDateOption .insightDateInputs input{
+  width: 80%;
+  margin-left:10px;
+  padding: 2px;
 }

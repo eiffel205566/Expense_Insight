@@ -1,4 +1,4 @@
-import { dateLetterArr, deleteDate, delayPrintDate, whiteCharHandler, extractNthItem, sumByCriteria } from './utility.js';
+import {dateLetterArr, printDate, whiteCharHandler, extractNthItem, sumByCriteria } from './utility.js';
 
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
@@ -10,10 +10,7 @@ let metaInput = document.querySelector('#input-text');
 let metaContainer = document.querySelector('.metatextContainer');
 let dropHeader = document.querySelector('.dropoffHeader');
 let button = document.querySelector('.meta-submit');
-let ctx = document.getElementById('myChart');
-//export let date = new Date();
-//export let dateLetterArr = date.toDateString().split("")
-// dateElement.innerHTML = date.toDateString();
+let barChart = document.getElementById('barChart');
 
 //burger menu animation
 burger.addEventListener("click", () => {
@@ -34,17 +31,14 @@ burger.addEventListener("click", () => {
 Interation with Metadata IndexDB
 */
 let db;
+let timeId
 
-window.onload = async function run() {
-  
-  //print out date... for fun???
-  let timeId = setInterval(() => {
-    delayPrintDate(dateLetterArr);
-    setTimeout(() => {
-      deleteDate()
-    }, 4000);
-  }, 8000);
-  
+printDate(dateLetterArr, timeId);
+
+window.onbeforeunload = () => clearInterval(timdId); //clearout timeId when leaving
+
+window.onload = function run() {
+
   //open database with version "2" so it will trigger onupgradeneeded event, so add another ObjectStore is possible
   let request = window.indexedDB.open('expense_db', 1);
   
@@ -327,7 +321,15 @@ function renderCharts() {
   
           if (cursor) {
             //console.log(`${cursor.value.merchant}, ${cursor.value.status}, ${cursor.value.amount}, ${cursor.value.date}`)
-            allData.push([cursor.value.merchant, cursor.value.status, cursor.value.amount, cursor.value.date])
+            //allData.push([cursor.value.merchant, cursor.value.status, cursor.value.amount, cursor.value.date])
+            allData.push(
+              {merchant: cursor.value.merchant,
+               status: cursor.value.status, 
+               amount: cursor.value.amount, 
+               date: cursor.value.date
+              })
+            
+            
             merchantList.add(cursor.value.merchant)
             cursor.continue();
           }
@@ -364,18 +366,19 @@ function renderCharts() {
   }).then(([expenseTypeList, allData, merchantList]) => {
     let obj = expenseTypeList.reduce((prev, curr) => {
       return {...prev, [curr]:0} 
-    }, {});
+    }, {}); //convert expenseTypeList to obj where key is expense type, and value is 0 to facilitate summing
 
+    //new
     for (let each of allData) {
-      obj[each[1]] += +each[2];  
+      obj[each['status']] += +each['amount'];  
     }
 
     for (let key in obj) {
       obj[key] = parseFloat(obj[key].toFixed(2));
     }
     
-    console.log(expenseTypeList)
-    let myChart = new Chart(ctx, {
+    // console.log(expenseTypeList)
+    let myChart = new Chart(barChart, {
       type: 'bar',
       data: {
           labels: [...expenseTypeList],

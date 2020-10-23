@@ -1,9 +1,4 @@
-
-// import {merchantInput} from './indexedDB.js';
-// import {submitBtn} from './indexedDB.js';
-// import {merchantsDropdown} from './indexedDB.js';
-
-import { dateLetterArr, deleteDate, delayPrintDate } from './utility.js';
+import { dateLetterArr,  printDate} from './utility.js';
 
 let main = document.querySelector('.main');
 //let drags = Array.from(document.querySelectorAll('.draggable')); //All elements able to drag
@@ -25,16 +20,10 @@ let expenseDropdown = Array.from(document.querySelectorAll(".indexedDb > .conten
 // let elementEntryTodo = document.querySelector('#value-todo');
 
 //typing date
-window.addEventListener('load', function() {
-    let timeId = setInterval(() => {
-    delayPrintDate(dateLetterArr);
-    setTimeout(() => {
-      deleteDate()
-    }, 4000);
-  }, 8000);
-});
+let timeId
+printDate(dateLetterArr, timeId);
 
-export let zz = 1;
+window.onbeforeunload = () => clearInterval(timdId);
 
 //let totalSubmitCount = document.querySelector('.indexedDb').childElementCount;
 // elementEntrySubmit.innerText = totalSubmitCount;

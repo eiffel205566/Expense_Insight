@@ -2,31 +2,46 @@ let date = new Date();
 let dateElement = document.querySelector('#date');
 export let dateLetterArr = date.toDateString().split("")
 
-//date typer, function to delet letter
-export function deleteDate() {
-  let timeId = setTimeout(function deleteLetter() {
-    if (dateElement.innerHTML.length === 0) {
-      clearTimeout(timeId);
-    } else {
-      dateElement.innerHTML = dateElement.innerHTML.slice(0, dateElement.innerHTML.length - 1)         
-      timeId = setTimeout(deleteDate(), 100) 
-    }
-  }, 100)
+function deleteDate(timeId) {
+  return new Promise((resolve) => {
+    timeId = setTimeout(function deleteLetter() {
+      if (dateElement.innerHTML.length === 0) {
+        clearTimeout(timeId);
+        //wait 1 second and resolve so there is a delay
+        setTimeout(() => {
+          resolve(timeId)
+        }, 1000);
+
+      } else {
+        dateElement.innerHTML = dateElement.innerHTML.slice(0, dateElement.innerHTML.length - 1) 
+        timeId = setTimeout(() => deleteLetter(), 100)
+      }
+    })
+  })
 }
 
 //date type, function to type out letter
-export function delayPrintDate(arr) {
-  let i = 0;
-  let timeId = setTimeout(function addLetter() {
-    // console.log(arr[i]);
-    dateElement.innerHTML += arr[i];
-    i++;
-    if (i == arr.length) {
-      clearTimeout(timeId)
-    } else {
-      timeId = setTimeout(addLetter, 200)  
-    }
-  },200);
+function delayPrintDate(arr, timeId) {
+  return new Promise((resolve) => {
+    let i = 0;
+    timeId = setTimeout(function addLetter() {
+      // console.log(arr[i]);
+      dateElement.innerHTML += arr[i];
+      i++;
+      if (i == arr.length) {
+        clearTimeout(timeId)
+        //wait 1 sec and then resolve, to facilitate deletion
+        setTimeout(()=> resolve(timeId), 1000)
+  
+      } else {
+        timeId = setTimeout(addLetter, 200)  
+      }
+    },200);
+  })
+}
+
+export function printDate(arr, timeId) {
+  delayPrintDate(arr, timeId).then(() => deleteDate(timeId)).then(() => printDate(arr, timeId))
 }
 
 
@@ -64,3 +79,17 @@ export function sumByCriteria(allData, criteriaList) {
 
   return Object.values(summaryObj);
 }
+
+
+//add 3 toggle option: last 1 month, last 3 month, all time
+//chart options: bar, pie, etc
+//expense by merchant
+//expense by type
+
+
+//renderChart to accept arguments specifing which type of chart
+
+//initially render a bar chart, with arrow on top right
+//hover effect of constant moving arrow 
+//click arrow will bring back to chart build UI where user will design 
+//own chart by using the toggles
