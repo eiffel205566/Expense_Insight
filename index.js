@@ -23,7 +23,7 @@ let expenseDropdown = Array.from(document.querySelectorAll(".indexedDb > .conten
 let timeId
 printDate(dateLetterArr, timeId);
 
-window.onbeforeunload = () => clearInterval(timdId);
+//window.onbeforeunload = () => clearInterval(timdId);
 
 //let totalSubmitCount = document.querySelector('.indexedDb').childElementCount;
 // elementEntrySubmit.innerText = totalSubmitCount;

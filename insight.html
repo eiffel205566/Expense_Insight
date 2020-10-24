@@ -19,7 +19,7 @@
 
   <ul class="innerselection">
     <li><a class="innerlink" href="./index.html">Home</a></li>
-    <li><a class="innerlink" href="">Expense Management & Insight</a></li>
+    <li><a class="innerlink" href="">Expense Types & Insight</a></li>
   </ul>
   
   <div class="content-1">
@@ -29,7 +29,7 @@
   <div class="main insight">
     <div class="metadata paddingTopBottom-20 marginLeft10 marginTop20" >
       
-      <div class="metadataHeader paddingTopBottom-20"><h3>Expense Rollup & Management</h3></div>
+      <div class="metadataHeader paddingTopBottom-20"><h3>Expense Type Management</h3></div>
 
       <div class="metadataContainer paddingTopBottom-20">
         <div class="metaline">
@@ -50,7 +50,7 @@
         
         <div class="metadata_control">
           <form class="metadata_input paddingAround-20">
-            <div class="input-section">Enter New Expense Type <input id="input-text" type="text" placeholder="Enter New Expense Type"><i class="fas fa-edit"></i>
+            <div class="input-section"> <input id="input-text" type="text" placeholder="Enter New Expense Type"><i class="fas fa-edit"></i>
               <!-- <span class="warning">Please fill out the field</span> -->
             </div>
             <button class="meta-submit">Submit</button>
@@ -72,7 +72,7 @@
     <div class="insights paddingTopBottom-20 marginLeft10 marginTop20">
       <div class="blocker"></div>
       <div class="arrowContainer paddingTopBottom-10">
-        <i class="fas fa-long-arrow-alt-left fa-2x"></i>
+        <i id='backArrow' class="fas fa-long-arrow-alt-left fa-2x"></i>
       </div>
       <div class="chartContainer">
         <canvas class='paddingAround-5' id="barChart" width="80%" height="70%"></canvas>
@@ -90,23 +90,40 @@
         <div class="uiDetail">
           <div class="insightDateOption">
             <div class="dateOptionHeader paddingTopBottom-10">
-              <h3>Pick The Date</h3>
+              <h3>Parameters</h3>
             </div>
 
             <div class="insightDateInputs">
 
               <div class="dateInputFrom paddingAround-5">
-                <i id='insightFromDate' class="far fa-calendar-alt"></i>
-                <h6>From</h6>
-                <input class="content-4-input" type="date">
+                <i class="far fa-calendar-alt"></i>
+                <h5>From</h5>
+                <input class="insightFromDate" type="date">
               </div>
               <div class="dateInputTo paddingAround-5">
-                <i id='insightFromDate' class="far fa-calendar-alt"></i>
-                <h6>To  </h6>
-                <input class="content-4-input" type="date">
+                <i class="far fa-calendar-alt"></i>
+                <h5>To  </h5>
+                <input class="insightToDate" type="date">
               </div>
-            </div>
+              <div class="insightWarning"><h5>From Date cannot be later than To Date</h5></div>
+              <div id='basisOptionContainer' class="dateInputTo paddingAround-5">
+                <i class="far fa-caret-square-down"></i>
+                <h5>Basis</h5>
+                <select name="basisOptions" id="basisOptions">
+                  <option value="none">Select An Option</option>      
+                  <option value="Expense Type">Expense Type</option>
+                  <option value="Merchants">Merchants</option>
+                </select>
+              </div>
 
+              <div class="bottomArrowWrapper" data-chartType=''>
+                <!-- <div class="blockerBottom"></div> -->
+                <div class="arrowContainerForward paddingTopBottom-10">
+                  <i id='forwardArrow' class="fas fa-long-arrow-alt-right fa-2x"></i>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
 

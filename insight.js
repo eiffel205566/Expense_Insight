@@ -9,7 +9,7 @@ const form = document.querySelector('form');
 let metaInput = document.querySelector('#input-text');
 let metaContainer = document.querySelector('.metatextContainer');
 let dropHeader = document.querySelector('.dropoffHeader');
-let button = document.querySelector('.meta-submit');
+// let button = document.querySelector('.meta-submit');
 let barChart = document.getElementById('barChart');
 
 //burger menu animation
@@ -31,11 +31,11 @@ burger.addEventListener("click", () => {
 Interation with Metadata IndexDB
 */
 let db;
-let timeId
+let timeId = 0;
 
 printDate(dateLetterArr, timeId);
 
-window.onbeforeunload = () => clearInterval(timdId); //clearout timeId when leaving
+// window.onbeforeunload = () => clearInterval(timdId); //clearout timeId when leaving
 
 window.onload = function run() {
 
@@ -417,3 +417,111 @@ function renderCharts() {
 
   })
 }
+
+
+/* 
+
+### --- Graph Design UI Section --- ###
+
+interface with 3 level: 
+
+1: ask user to pick which chart to render
+graphUI > barContainer 
+graphUI > pieContainer
+
+2: ask user to provide parameter of chart
+graphUI > uiDetail
+
+3: render chart
+chartContainer
+
+*/
+
+
+let chartContainer = document.querySelector('.chartContainer');
+// let graphUI = document.querySelector('.graphUI');
+let barContainer = document.querySelector('.graphUI .barContainer')
+let pieContainer = document.querySelector('.graphUI .pieContainer')
+let uiDetail = document.querySelector('.uiDetail');
+let backArrow = document.querySelector('.arrowContainer')
+let basisOptions = document.querySelector('#basisOptionContainer')
+let insightFromDate = document.querySelector('.insightFromDate');
+let insightToDate = document.querySelector('.insightToDate');
+let insightWarning = document.querySelector('.insightWarning');
+let bottomArrow = document.querySelector('.bottomArrowWrapper');
+let basisOptionSelection = document.querySelector('#basisOptions');
+
+function resetInsightUI() {
+  chartContainer.style.display = '';
+  uiDetail.style.display = '';
+  barContainer.style.display = 'block'
+  pieContainer.style.display = 'block'
+  insightFromDate.value = '';
+  insightToDate.value = '';
+  basisOptions.style.display = '';
+  insightWarning.style.display = '';
+  bottomArrow.style.display = '';
+}
+
+backArrow.addEventListener('click', () => resetInsightUI());
+barContainer.addEventListener('click', (event) => renderGraphBuilder(event));
+pieContainer.addEventListener('click', (event) => renderGraphBuilder(event));
+basisOptionSelection.addEventListener('input', () => bottomArrow.style.display = 'block');
+
+// starts here!! when date validation fail, need to get rid of basisOption 
+ 
+
+insightFromDate.oninput = () => {
+  if (insightFromDate.value && insightToDate.value) {
+    if (new Date(insightToDate.value) >= new Date(insightFromDate.value)) {
+      basisOptions.style.display = 'flex'
+      insightWarning.style.display = '';
+    } else {
+      insightWarning.style.display = 'block';
+      insightFromDate.value = '';
+      basisOptions.style.display = '';
+      bottomArrow.style.display = '';
+    }
+  }
+};
+
+insightToDate.oninput = () => {
+  if (insightFromDate.value && insightToDate.value) {
+    if (new Date(insightToDate.value) >= new Date(insightFromDate.value)) {
+      basisOptions.style.display = 'flex'
+      insightWarning.style.display = '';  
+    } else {
+      insightWarning.style.display = 'block';
+      insightToDate.value = '';
+      basisOptions.style.display = '';     
+      bottomArrow.style.display = '';
+    }
+  }
+};
+
+function renderGraphBuilder(event) {
+  barContainer.style.display = 'none'
+  pieContainer.style.display = 'none'
+  if (barContainer.contains(event.target)) {
+    bottomArrow.setAttribute('data-chartType', 'bar')
+  }
+  if (pieContainer.contains(event.target)) {
+    bottomArrow.setAttribute('data-chartType', 'pie')
+  }
+  uiDetail.style.display = 'block';
+}
+
+bottomArrow.addEventListener("click", () => {
+  resetInsightUI();
+  barContainer.style.display = '';
+  pieContainer.style.display = '';
+  chartContainer.style.display = 'block';
+})
+
+//### --- Graph Design UI Section --- ###
+
+
+
+
+
+

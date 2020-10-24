@@ -678,12 +678,15 @@ body {
   display: none;
 }
 
+
+/* 
+back arrow formatting
+*/
 .insights .arrowContainer {
   position: relative;
   max-width: 100px;
-  
 }
- 
+
 .insights .arrowContainer .fas {
   position: relative;
   left:30px;
@@ -702,7 +705,7 @@ body {
   from {left: 50px;}
   to {left: 0px; opacity: 0.1;}
 } 
-
+/* to block blinking effect */
 .blocker {
   position: absolute;
   height: 100px;
@@ -712,6 +715,51 @@ body {
   background:yellow;
 }
 
+/* backarrow  */
+
+/* forward arrow formatting*/
+
+.insights .arrowContainerForward {
+  position: relative;
+  max-width: 100px;
+  left: 80%;
+}
+
+.insights .arrowContainerForward .fas {
+  position: relative;
+  left:0;
+  color: var(--draggable-color);
+  transition: 1s all;
+}
+
+.insights .arrowContainerForward {
+  cursor: pointer;
+  left: 80%;
+  animation: moveRight 1s infinite;
+}
+
+@keyframes moveRight {
+  from {left: 80%;}
+  to {left: 95%; opacity: 0.1;}
+}
+
+.bottomArrowWrapper {
+  position: relative;
+  display: none;
+}
+
+/* .blockerBottom {
+  position: absolute;
+  left: 80%;
+  top: 50%;
+  height: 100%;
+  width: 50px;
+  z-index: 1;
+  opacity: 1;
+  background:yellow;
+} */
+
+/*forward arrow*/
 .insights .graphUI {
   width: 80%;
   height: 70%;
@@ -730,11 +778,10 @@ body {
   flex-grow: 1;
   margin: 5px;
   transition: 0.5s all;
-  box-shadow: none;
   position: relative;
   top: 0px;
   width: fit-content;
-  display: none;
+  display: block;
 }
 
 .insights .graphUI .barContainer:hover,
@@ -756,6 +803,7 @@ body {
 
 .uiDetail {
   width: 100%;
+  display: none;
 }
 
 .uiDetail .insightDateOption {
@@ -773,8 +821,10 @@ body {
   flex-direction: column;
 }
 
-.uiDetail .insightDateOption .insightDateInputs input {
+.uiDetail .insightDateOption .insightDateInputs input,
+.uiDetail .insightDateOption .insightDateInputs select {
   max-width: 80%;
+  height: 30px;
 }
 
 .uiDetail .insightDateOption .insightDateInputs .dateInputFrom,
@@ -789,8 +839,26 @@ body {
   flex-grow: 1;
 }
 
-.uiDetail .insightDateOption .insightDateInputs input{
+.uiDetail .insightDateOption .insightDateInputs input,
+.uiDetail .insightDateOption .insightDateInputs select {
   width: 80%;
   margin-left:10px;
   padding: 2px;
 }
+
+.uiDetail .insightDateOption .insightDateInputs #basisOptionContainer {
+  display: none;
+}
+
+.insightWarning {
+  margin:auto;
+  color: red;
+  display: none;
+}
+
+/* 
+chartContainer
+graphUI > barContainer 
+graphUI > pieContainer
+graphUI > uiDetail
+*/
