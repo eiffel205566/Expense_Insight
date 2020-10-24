@@ -1,4 +1,4 @@
-import {dateLetterArr, printDate, whiteCharHandler, extractNthItem, sumByCriteria } from './utility.js';
+import {dateLetterArr, printDate, whiteCharHandler, extractNthItem, renderChart, getRandomColors } from './utility.js';
 
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
@@ -10,7 +10,8 @@ let metaInput = document.querySelector('#input-text');
 let metaContainer = document.querySelector('.metatextContainer');
 let dropHeader = document.querySelector('.dropoffHeader');
 // let button = document.querySelector('.meta-submit');
-let barChart = document.getElementById('barChart');
+let myChart = document.getElementById('myChart');
+let chart;
 
 //burger menu animation
 burger.addEventListener("click", () => {
@@ -181,7 +182,7 @@ window.onload = function run() {
 
     //render charts on initial load
     transaction.oncomplete = () => {
-      renderCharts();
+      // renderCharts();
     }
   }
 
@@ -221,7 +222,7 @@ window.onload = function run() {
 
     //when adding new data
     transaction.oncomplete = () => {
-      renderCharts()
+      // renderCharts()
     }
   };
 
@@ -271,7 +272,7 @@ function deleteData(event, idToDelete, dataToDelete) {
         //once the request to iterator all cursor item and replaced all deleted value with "Categorized"
         //re-render charts with new information
         updateTransactionDataRequest.oncomplete = () => {
-          renderCharts()
+          // renderCharts()
         }
       };
     })
@@ -293,7 +294,7 @@ dropOff.addEventListener('dragleave', () => {
 });
 
 
-function renderCharts() {
+function renderCharts({chartType='bar', base='Expense Type', time=['2020-10-13', '2020-10-14']}={}) {
 
   //open expense item (transactional) db and resolve the db
   function openDB() {
@@ -336,7 +337,7 @@ function renderCharts() {
         };
   
         transaction.oncomplete = () => {
-          resolve([db, allData, merchantList])
+          resolve([db, allData, Array.from(merchantList)])
         }
       })
     }
@@ -364,57 +365,59 @@ function renderCharts() {
       }
     })
   }).then(([expenseTypeList, allData, merchantList]) => {
-    let obj = expenseTypeList.reduce((prev, curr) => {
-      return {...prev, [curr]:0} 
-    }, {}); //convert expenseTypeList to obj where key is expense type, and value is 0 to facilitate summing
 
-    //new
-    for (let each of allData) {
-      obj[each['status']] += +each['amount'];  
-    }
-
-    for (let key in obj) {
-      obj[key] = parseFloat(obj[key].toFixed(2));
-    }
+    chart = renderChart(chartType, base, time, allData, expenseTypeList, merchantList)
     
-    // console.log(expenseTypeList)
-    let myChart = new Chart(barChart, {
-      type: 'bar',
-      data: {
-          labels: [...expenseTypeList],
-          datasets: [{
-              label: '$$',
-              data: [...Object.values(obj)],
-              backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                  'rgba(75, 192, 192, 0.2)',
-                  'rgba(153, 102, 255, 0.2)',
-                  'rgba(255, 159, 64, 0.2)'
-              ],
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
-          }
-      }
-    });
+    // let obj = expenseTypeList.reduce((prev, curr) => {
+    //   return {...prev, [curr]:0} 
+    // }, {}); //convert expenseTypeList to obj where key is expense type, and value is 0 to facilitate summing
 
+    // //new
+    // for (let each of allData) {
+    //   obj[each['status']] += +each['amount'];  
+    // }
+
+    // for (let key in obj) {
+    //   obj[key] = parseFloat(obj[key].toFixed(2));
+    // }
+    
+    // // console.log(expenseTypeList)
+    // let chart = new Chart(myChart, {
+    //   type: 'bar',
+    //   data: {
+    //       labels: [...expenseTypeList],
+    //       datasets: [{
+    //           label: '$$',
+    //           data: [...Object.values(obj)],
+    //           backgroundColor: [
+    //               'rgba(255, 99, 132, 0.2)',
+    //               'rgba(54, 162, 235, 0.2)',
+    //               'rgba(255, 206, 86, 0.2)',
+    //               'rgba(75, 192, 192, 0.2)',
+    //               'rgba(153, 102, 255, 0.2)',
+    //               'rgba(255, 159, 64, 0.2)'
+    //           ],
+    //           borderColor: [
+    //               'rgba(255, 99, 132, 1)',
+    //               'rgba(54, 162, 235, 1)',
+    //               'rgba(255, 206, 86, 1)',
+    //               'rgba(75, 192, 192, 1)',
+    //               'rgba(153, 102, 255, 1)',
+    //               'rgba(255, 159, 64, 1)'
+    //           ],
+    //           borderWidth: 1
+    //       }]
+    //   },
+    //   options: {
+    //       scales: {
+    //           yAxes: [{
+    //               ticks: {
+    //                   beginAtZero: true
+    //               }
+    //           }]
+    //       }
+    //   }
+    // });
   })
 }
 
@@ -439,7 +442,7 @@ chartContainer
 
 
 let chartContainer = document.querySelector('.chartContainer');
-// let graphUI = document.querySelector('.graphUI');
+let graphUI = document.querySelector('.graphUI');
 let barContainer = document.querySelector('.graphUI .barContainer')
 let pieContainer = document.querySelector('.graphUI .pieContainer')
 let uiDetail = document.querySelector('.uiDetail');
@@ -454,19 +457,29 @@ let basisOptionSelection = document.querySelector('#basisOptions');
 function resetInsightUI() {
   chartContainer.style.display = '';
   uiDetail.style.display = '';
-  barContainer.style.display = 'block'
-  pieContainer.style.display = 'block'
+  graphUI.style.display = 'flex';
+  barContainer.style.display = 'block';
+  pieContainer.style.display = 'block';
   insightFromDate.value = '';
   insightToDate.value = '';
   basisOptions.style.display = '';
   insightWarning.style.display = '';
   bottomArrow.style.display = '';
+
+  //chart must be destroied before create a new chart
+  if (chart) {
+    chart.destroy();
+  }
 }
 
 backArrow.addEventListener('click', () => resetInsightUI());
 barContainer.addEventListener('click', (event) => renderGraphBuilder(event));
 pieContainer.addEventListener('click', (event) => renderGraphBuilder(event));
-basisOptionSelection.addEventListener('input', () => bottomArrow.style.display = 'block');
+basisOptionSelection.addEventListener('input', () => {
+  if (basisOptionSelection.value !== 'none') {
+    bottomArrow.style.display = 'block'
+  }
+});
 
 // starts here!! when date validation fail, need to get rid of basisOption 
  
@@ -478,7 +491,7 @@ insightFromDate.oninput = () => {
       insightWarning.style.display = '';
     } else {
       insightWarning.style.display = 'block';
-      insightFromDate.value = '';
+      // insightFromDate.value = '';
       basisOptions.style.display = '';
       bottomArrow.style.display = '';
     }
@@ -492,7 +505,7 @@ insightToDate.oninput = () => {
       insightWarning.style.display = '';  
     } else {
       insightWarning.style.display = 'block';
-      insightToDate.value = '';
+      // insightToDate.value = '';
       basisOptions.style.display = '';     
       bottomArrow.style.display = '';
     }
@@ -512,10 +525,28 @@ function renderGraphBuilder(event) {
 }
 
 bottomArrow.addEventListener("click", () => {
+  
+  bottomArrow.setAttribute('data-from', insightFromDate.value)
+  bottomArrow.setAttribute('data-to', insightToDate.value)
+  bottomArrow.setAttribute('base', basisOptionSelection.value)
+
   resetInsightUI();
-  barContainer.style.display = '';
-  pieContainer.style.display = '';
+  graphUI.style.display = 'none';
+  // barContainer.style.display = 'none';
+  // pieContainer.style.display = 'none';
   chartContainer.style.display = 'block';
+
+  let chartPropObj = {
+    chartType: bottomArrow.getAttribute('data-chartType'), 
+    base: basisOptionSelection.value,
+    time: [bottomArrow.getAttribute('data-from'), bottomArrow.getAttribute('data-to')],
+  }
+
+  // console.log(chartPropObj)
+  // renderCharts()
+  renderCharts(chartPropObj);
+
+  // chartContainer.removeChild(chartContainer.firstElementChild)
 })
 
 //### --- Graph Design UI Section --- ###

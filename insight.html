@@ -59,7 +59,7 @@
           <div class="metaRemoveContainer paddingAround-20">
             <i class="far fa-trash-alt fa-2x"></i>
             <div class="metaDropoffWrapper">
-              <div class="dropoffHeader">Drop Off to Delete</div>
+              <div class="dropoffHeader">Drag & Drop Off to Delete</div>
               <div class="dropoff">
                 <div id="placeholder"></div>
               </div>
@@ -75,7 +75,7 @@
         <i id='backArrow' class="fas fa-long-arrow-alt-left fa-2x"></i>
       </div>
       <div class="chartContainer">
-        <canvas class='paddingAround-5' id="barChart" width="80%" height="70%"></canvas>
+        <canvas class='paddingAround-5' id="myChart" width="80%" height="70%"></canvas>
       </div>
       <div class="graphUI marginTop20">
         <div class="barContainer paddingAround-5">
@@ -98,12 +98,12 @@
               <div class="dateInputFrom paddingAround-5">
                 <i class="far fa-calendar-alt"></i>
                 <h5>From</h5>
-                <input class="insightFromDate" type="date">
+                <input class="insightFromDate" type="date" data-from=''>
               </div>
               <div class="dateInputTo paddingAround-5">
                 <i class="far fa-calendar-alt"></i>
                 <h5>To  </h5>
-                <input class="insightToDate" type="date">
+                <input class="insightToDate" type="date" data-to=''>
               </div>
               <div class="insightWarning"><h5>From Date cannot be later than To Date</h5></div>
               <div id='basisOptionContainer' class="dateInputTo paddingAround-5">
@@ -116,7 +116,7 @@
                 </select>
               </div>
 
-              <div class="bottomArrowWrapper" data-chartType=''>
+              <div class="bottomArrowWrapper" data-chartType='' data-from = '' data-to='' base=''>
                 <!-- <div class="blockerBottom"></div> -->
                 <div class="arrowContainerForward paddingTopBottom-10">
                   <i id='forwardArrow' class="fas fa-long-arrow-alt-right fa-2x"></i>

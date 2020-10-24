@@ -862,3 +862,14 @@ graphUI > barContainer
 graphUI > pieContainer
 graphUI > uiDetail
 */
+
+
+/* .insights .graphUI,
+.insights .graphUI .barContainer,
+.insights .graphUI .pieContainer {
+  display: none !important;
+}
+
+.chartContainer {
+  display: block !important;
+} */

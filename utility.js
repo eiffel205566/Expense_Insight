@@ -66,30 +66,82 @@ export function extractNthItem(arr, index) {
 
 //utility function to sum up values base on criteria
 //example: sum expense by expense type
-export function sumByCriteria(allData, criteriaList) {
-  //obj containing each key in criteriaList with value of 0
+export function renderChart(chartType, base, time, allData, expenseTypeList, merchantList) {
+  //obj containing each key in baseList with value of 0
   //to facilitate summarization
-  let summaryObj = criteriaList.reduce((prev, curr) => {
+  let baseList = (base == 'Expense Type') ? expenseTypeList : merchantList;
+  let chart
+
+  let summaryObj = baseList.reduce((prev, curr) => {
     return {...prev, [curr]:0} 
   }, {});
 
+  
   for (let transaction of allData) {
-    summaryObj[transaction.status] += transaction.amount
+    if (time[0] <= transaction['date'] && time[1] >= transaction['date']) {
+      let propertyName = base == 'Expense Type' ? 'status' : 'merchant';
+      summaryObj[transaction[propertyName]] += +transaction['amount']
+
+      // summaryObj[transaction['status']] += +transaction['amount'] //expense type
+      // summaryObj[transaction['merchant']] += +transaction['amount']
+
+    }
   }
 
-  return Object.values(summaryObj);
+  for (let key in summaryObj) {
+    summaryObj[key] = parseFloat(summaryObj[key].toFixed(2));
+  }
+
+  //console.log(summaryObj);
+
+  if (chartType == 'bar') {
+    chart = new Chart(myChart, {
+      type: 'bar',
+      data: {
+          labels: [...baseList],
+          datasets: [{
+              label: `Exp By ${base.toUpperCase()}, ${time[0]} to ${time[1]}}`,
+              data: [...Object.values(summaryObj)],
+              backgroundColor: getRandomColors(baseList.length),
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+    });
+
+  }
+  console.log(chart);
+  return chart;
 }
 
 
-//add 3 toggle option: last 1 month, last 3 month, all time
-//chart options: bar, pie, etc
-//expense by merchant
-//expense by type
 
 
-//renderChart to accept arguments specifing which type of chart
+export function getRandomColors(n) {
+  let result = Array(n).fill(1);
+  function getRandomColor() {
+    let r = Math.floor(Math.random() * 255)
+    let g = Math.floor(Math.random() * 255)
+    let b = Math.floor(Math.random() * 255)
 
-//initially render a bar chart, with arrow on top right
-//hover effect of constant moving arrow 
-//click arrow will bring back to chart build UI where user will design 
-//own chart by using the toggles
+    return `rgba(${r}, ${g}, ${b}, 0.2)`
+  }
+  return result.map(x => getRandomColor())
+}
+
