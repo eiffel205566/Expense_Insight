@@ -81,10 +81,6 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
     if (time[0] <= transaction['date'] && time[1] >= transaction['date']) {
       let propertyName = base == 'Expense Type' ? 'status' : 'merchant';
       summaryObj[transaction[propertyName]] += +transaction['amount']
-
-      // summaryObj[transaction['status']] += +transaction['amount'] //expense type
-      // summaryObj[transaction['merchant']] += +transaction['amount']
-
     }
   }
 
@@ -92,9 +88,13 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
     summaryObj[key] = parseFloat(summaryObj[key].toFixed(2));
   }
 
-  //console.log(summaryObj);
+  let totalExpense = Object.values(summaryObj).reduce((prev, curr) => {
+    return prev + curr
+  }, 0);
 
-  if (chartType == 'bar') {
+  totalExpense = parseFloat(totalExpense.toFixed(2));
+
+  if (chartType == 'bar') { //bar chart
     chart = new Chart(myChart, {
       type: 'bar',
       data: {
@@ -103,14 +103,7 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
               label: `Exp By ${base.toUpperCase()}, ${time[0]} to ${time[1]}}`,
               data: [...Object.values(summaryObj)],
               backgroundColor: getRandomColors(baseList.length),
-              borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                  'rgba(75, 192, 192, 1)',
-                  'rgba(153, 102, 255, 1)',
-                  'rgba(255, 159, 64, 1)'
-              ],
+              borderColor: getRandomColors(baseList.length),
               borderWidth: 1
           }]
       },
@@ -121,17 +114,50 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
                       beginAtZero: true
                   }
               }]
-          }
+          },
+          title: {
+            display: true,
+            position: 'bottom',
+            text: [`Total: \$ ${totalExpense}`],
+            fontSize: 12
+          },
       }
     });
+  } else { //pie chart
 
+    let options = {
+      title: {
+          display: true,
+          position: 'bottom',
+          text: [`Total: \$ ${totalExpense}`],
+          fontSize: 10
+        },
+    };
+
+    //calculate percentage and display it alongside label
+    let percentageObj = Object.keys(summaryObj).reduce((prev, curr) => {
+      let percent = summaryObj[curr] / totalExpense * 100
+      let percentStr = percent.toFixed(2) + '%' 
+      return {...prev, [curr]: `${curr}: ${percentStr}`}
+    }, {})
+
+    let data = {
+      labels: [...Object.values(percentageObj)], 
+      datasets:
+        [{
+          data: [...Object.values(summaryObj)],
+          backgroundColor: getRandomColors(baseList.length),
+          hoverBackgroundColor: getRandomColors(baseList.length)
+        }]
+    };
+    chart = new Chart(myChart, {
+      type: 'pie',
+      data: data,
+      options: options
+    });
   }
-  console.log(chart);
   return chart;
 }
-
-
-
 
 export function getRandomColors(n) {
   let result = Array(n).fill(1);
