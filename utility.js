@@ -171,3 +171,15 @@ export function getRandomColors(n) {
   return result.map(x => getRandomColor())
 }
 
+export function openDB() {
+  return new Promise((resolve, reject) => {
+    let request = window.indexedDB.open('expense_db', 1);
+    request.onsuccess = (event) => {
+      let db = event.target.result;
+      resolve(db)
+    };
+
+    request.onerror = () => console.log('error opening db')
+
+  })
+}

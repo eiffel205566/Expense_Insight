@@ -1,4 +1,4 @@
-import { dateLetterArr,  printDate} from './utility.js';
+import { dateLetterArr,  printDate, openDB} from './utility.js';
 
 let main = document.querySelector('.main');
 //let drags = Array.from(document.querySelectorAll('.draggable')); //All elements able to drag
@@ -15,6 +15,7 @@ export let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
 let expenseDropdown = Array.from(document.querySelectorAll(".indexedDb > .content-5-header > ul > li > i"));
 
+
 // let elementEntrySubmit = document.querySelector('#value-submit'); //display value
 // let elementEntryDone= document.querySelector('#value-done');
 // let elementEntryTodo = document.querySelector('#value-todo');
@@ -29,12 +30,8 @@ printDate(dateLetterArr, timeId);
 // elementEntrySubmit.innerText = totalSubmitCount;
 
 //Dropdown
-dropDown.addEventListener('click', (event) => console.log(event.currentTarget));
 
-//Refresh button
-refresh.addEventListener('click', (event) => {
-  refreshableContent.forEach((element) => element.value = "");
-});
+
 
 //add event listener 
 content5TopElements.forEach(
@@ -108,4 +105,99 @@ burger.addEventListener("click", () => {
 });
 
 
+/* 
+Expense Category Drop down
+*/
 
+// expenseTypeDropdown.addEventListener('focusout', () => {
+//   console.log('out')
+// })
+
+//Refresh button, to reset filters
+refresh.addEventListener('click', () => {
+  let expenseEntries = Array.from(document.querySelectorAll('.indexedDb .needborder'));
+  refreshableContent.forEach((element) => element.value = "");
+  expenseEntries.forEach(expenseEntry => {
+    expenseEntry.parentElement.parentElement.style.display = 'grid'
+  })
+});
+
+
+let expenseTypeDropList = document.querySelector('.expenseTypeDropdownList');
+expenseTypeDropList.addEventListener('click', (e) => {
+  // console.log(e.target)
+  expenseTypeDropdown.value = e.target.innerText;
+})
+
+let expenseTypeInput = document.querySelector('#expenseTypeDropdown');
+
+//experiment to limit dropdown options based on user input in expense category
+expenseTypeInput.oninput = (e) => {
+  let options = Array.from(document.querySelectorAll('.content-4 .expense-dropdown .expenseTypeDropdownList div'))
+
+  if (!expenseTypeInput.value) { //if input value is blank, or user deleted everything, show all
+    options.forEach(div => div.style.display = 'block');
+  } else { //if not then only display option that match input
+    options.forEach(div => {
+      if (!div.innerText.includes(expenseTypeInput.value)) {
+        div.style.display = 'none'
+      }
+    })
+  }
+}
+
+//limit dropdown options based on user input in Merchant Dropdown
+// let merchantDropdownList = document.querySelector('.merchantDropdownList');
+let merchantInput = document.querySelector('#input-merchant');
+merchantInput.oninput = () => {
+  let merchantDivs = Array.from(document.querySelectorAll('.merchantDropdownList .merchant'));
+  if (!merchantInput.value) {
+    merchantDivs.forEach(merchantDiv => merchantDiv.style.display = 'block');
+  } else {
+    
+    merchantDivs.forEach(merchantDiv => {
+      if (!merchantDiv.innerText.includes(merchantInput.value)) {
+        merchantDiv.style.display = 'none'
+      }
+    })
+  }
+}
+
+//execute (double right arrow) button click to filter transaction 
+let executeDiv = document.querySelector('#execute');
+executeDiv.addEventListener('click', () => {
+  let expenseEntries = Array.from(document.querySelectorAll('.indexedDb .needborder'));
+  let fromDate = document.querySelector('#fromDate')
+  let toDate = document.querySelector('#toDate')
+
+  expenseEntries.forEach(expenseEntry => {
+    expenseEntry.parentElement.parentElement.style.display = 'grid'
+  })
+
+  
+  expenseEntries.forEach(expenseEntry => {
+    let transactionDate = expenseEntry.parentElement.parentElement.childNodes[1].innerText;
+
+    //if expense type input is not empty, use it as filter and check against each entry's expense type
+    if (expenseTypeInput.value) {
+      if (expenseEntry.innerText !== expenseTypeInput.value) {
+        expenseEntry.parentElement.parentElement.style.display = 'none'
+      }
+    }
+    
+    //if from date input (#fromDate) is not empty, use the value to check against transaction date
+    if (fromDate.value) {
+      if (fromDate.value > transactionDate) {
+        // console.log(`fromdate: ${fromDate.value} trans:${transactionDate} ${fromDate.value > transactionDate}, ${expenseEntry.parentElement.parentElement.style.display}`)
+        expenseEntry.parentElement.parentElement.style.display = 'none'
+      }
+    }
+    
+    if (toDate.value) {
+      if (toDate.value < transactionDate) {
+        expenseEntry.parentElement.parentElement.style.display = 'none'
+      }
+    }
+
+  })
+})

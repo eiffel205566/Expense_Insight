@@ -1,4 +1,11 @@
-import {dateLetterArr, printDate, whiteCharHandler, extractNthItem, renderChart, getRandomColors } from './utility.js';
+import {
+  dateLetterArr, 
+  printDate, 
+  whiteCharHandler, 
+  extractNthItem, 
+  renderChart, 
+  getRandomColors,
+  openDB} from './utility.js';
 
 let burger = document.querySelector(".burger"); //burger menu
 let links = Array.from(document.querySelectorAll('.innerselection > li > a[class="innerlink"]'));
@@ -296,19 +303,7 @@ dropOff.addEventListener('dragleave', () => {
 
 function renderCharts({chartType='bar', base='Expense Type', time=['2020-10-13', '2020-10-14']}={}) {
 
-  //open expense item (transactional) db and resolve the db
-  function openDB() {
-    return new Promise((resolve, reject) => {
-      let request = window.indexedDB.open('expense_db', 1);
-      request.onsuccess = (event) => {
-        db = event.target.result;
-        resolve(db);
-      };
-      
-      request.onerror = () => console.log('fail to open')
-    })
-  };
-  
+  //open expense item (transactional) db and resolve the db  
   //chain then the db, and iterate cursor to get all raw data to be put in charts
   openDB().then(
     db => {

@@ -28,6 +28,7 @@ const contentParent = document.querySelector('.indexedDb');
 
 //Merchant Dropdown list
 export let merchantsDropdown = document.querySelector('.merchantDropdownList');
+let expenseTypeDropdown = document.querySelector('.expenseTypeDropdownList');
 
 // uncomment to reset by deleting the database
 
@@ -263,7 +264,7 @@ window.onload = function() {
 
           //continue for next entry
           cursor.continue();
-        } else {
+        } else {//iterator all cursor item completes
           
           //update uncategorized expense count in orange box
           elementEntryTodo.innerText = uncategorizedExpCount;
@@ -283,7 +284,12 @@ window.onload = function() {
             //add click listener to fill in input when clicked
             merchantDiv.addEventListener("click", (event) => {
               merchantInput.value = event.target.innerText;
-            });
+            })
+
+            // merchantDivClone.addEventListener('click', (event) => {
+            //   expenseTypeDropdown.value = event.target.innerText
+            // })
+
           });
         }
       }
@@ -293,6 +299,18 @@ window.onload = function() {
         let expenseLists = document.querySelectorAll(".expenseList");
         let chevrons = document.querySelectorAll("ul li i[class='fas fa-chevron-down']")
 
+        //expense type (Expense Category) drop down List
+        expenseTypeDropdown.innerHTML = ''; 
+        expenseListArr.forEach(expenseType => {
+          let expenseListItem = document.createElement("div");
+          expenseListItem.innerText = expenseType;
+          expenseTypeDropdown.append(expenseListItem);            
+        })
+        //Expense Category Contains Uncategorized
+        let uncategorizedDiv = document.createElement('div');
+        uncategorizedDiv.innerText = 'Uncategorized';
+        expenseTypeDropdown.append(uncategorizedDiv);
+          
         //add expense drop down list to each status
         expenseLists.forEach(expenseList => {
           expenseListArr.forEach(expenseType => {

@@ -312,6 +312,7 @@ body {
   border-bottom: 1px dotted var(--placeholder-color);
   cursor: pointer;
   transition: 0.2s all;
+  display: block;
 }
 
 .merchantDropdownList div:hover {
@@ -421,10 +422,48 @@ body {
   left: -20px;
 }
 
+
+/* expense type dropdown for Expense category */
+.content-4 .expense-dropdown .expenseTypeDropdownList {
+  position: absolute;
+  background: var(--category-color-even);
+  max-width: 300px;
+  display: none;
+  flex-direction: column;
+  z-index: 2;
+  top: 30px;
+  left: 10px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--placeholder-color);
+}
+
+.content-4 .expense-dropdown .expenseTypeDropdownList div {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  border-bottom: 1px dotted var(--placeholder-color);
+  cursor: pointer;
+  transition: 0.2s all;
+}
+
+.content-4 .expense-dropdown .expenseTypeDropdownList div:hover {
+  background: var(--placeholder-color);
+}
+
+.content-4 .expense-dropdown #expenseTypeDropdown:focus + i + .expenseTypeDropdownList{
+  display: flex;
+}
+
+.content-4 .expense-dropdown #expenseTypeDropdown + i + .expenseTypeDropdownList:hover {
+  display: flex;
+}
+
 .content-4 #refresh {
   position: absolute;
-  right: 10px;
   top: 5px;
+  left: 10px;
   transition: 0.5s all;
 }
 
@@ -432,6 +471,19 @@ body {
   cursor: pointer;
   opacity: 0.5;
   transform: rotate(90deg);
+}
+
+.content-4 #execute {
+  position: absolute;
+  transition: 0.5s all;
+  right: 10px;
+  top: 5px;
+}
+
+.content-4 #execute:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  right: 8px;
 }
 
 /* Content-5 detail section */
@@ -530,6 +582,9 @@ body {
   cursor: pointer;
 }
 
+.indexedDb > li {
+  display: block;
+}
 
 /* insight page */
 

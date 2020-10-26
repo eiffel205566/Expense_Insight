@@ -74,18 +74,22 @@
       
       <div class="content-4 search topBorder marginLeft10 paddingTopBottom-20">
         <p>From</p>
-        <i class="far fa-calendar-alt"><input class="content-4-input" type="date"></i>
+        <i class="far fa-calendar-alt"><input id='fromDate' class="content-4-input" type="date"></i>
         
         <p>To</p>
-        <i class="far fa-calendar-alt"><input class="content-4-input" type="date"></i>
+        <i class="far fa-calendar-alt"><input id='toDate' class="content-4-input" type="date"></i>
 
         <p>Expense Category</p>
         <div class="expense-dropdown">
-          <input class="content-4-input" type="text" placeholder="Choose the Category"></input>
+          <input id='expenseTypeDropdown' class="content-4-input" type="text" placeholder="Choose the Category"></input>
           <i class="fas fa-chevron-down"></i>
+          <div class="expenseTypeDropdownList">
+          </div>
         </div>
 
-        <div id="refresh"><i class="fas fa-sync-alt"></i></div>
+        <div id="refresh" data-icon='refresh'><i class="fas fa-sync-alt"></i></div>
+        <div id="execute"><i class="fas fa-angle-double-right"></i></div>
+        
       </div>
       
       <div class="content-5 topBorder marginLeft10 paddingAround-20 marginTop20">
