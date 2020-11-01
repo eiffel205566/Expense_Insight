@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Insight</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://kit.fontawesome.com/9ae1d035ad.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <nav class="header">
+    <div class='burger'>
+      <div class='burgerline'></div>
+    </div> 
+    <h3>Expense Insight</h3>
+  </nav>
+
+  <ul class="innerselection">
+    <li><a class="innerlink" href="./index.html">Home</a></li>
+    <li><a class="innerlink" href="./main.html">Expense Entry</a></li>
+    <li><a class="innerlink" href="./insight.html">Expense Management & Insight</a></li>
+  </ul>
+
+  <div class="main">
+    <div class="content">
+      <div class="content-1">
+        <p class="font-heading paddingTopBottom-20 marginLeft10">Insight For: <span id='date'></span></p>
+      </div>
+      <div class="content-2 marginLeft10 topBorder">
+        <p class="paragraph-1">Entering New Expense</p>
+        
+        <form class="content-2-input">
+          <div class="input-section">Merchant Description <input id="input-merchant" type="text" placeholder="Enter Merchant"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+            <div class="merchantDropdownList">
+            </div>
+          </div>
+
+          <div class="input-section input-setction-2">Expense Date <input id="input-date" type="date"><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+          </div>
+          
+          <div class="input-section">Expense Amount <input id="input-amount" type="number" step="0.01" placeholder="Enter Dolloar Amount"><button class="expense-submit">Submit</button><i class="fas fa-edit"></i><i class="fas fa-exclamation-circle"></i>
+            <span class="warning">Please fill out the field</span>
+          </div>
+        </form>
+      </div>
+      <div class="content-3 marginLeft10 paddingTopBottom-20">
+        <div id="display-submit" class="display">
+          
+          <div class="info-wrapper">
+            <h3 id="value-submit" class="value" data-value=22>22</h3>
+            <h6>Total Submitted</h6>
+          </div>
+    
+          <i class="fas fa-chart-bar fa-6x"></i>
+        </div>
+
+        <div id="display-uncategorized" class="display">
+          <div class="info-wrapper">
+            <h3 id="value-done" class="value" data-value=22>22</h3>
+            <h6>Total Categorized</h6>
+          </div>
+          <i class="far fa-check-square fa-6x"></i>
+        </div>
+        <div id="display-total" class="display">
+          <div class="info-wrapper">
+            <h3 id="value-todo" class="value" data-value=22>22</h3>
+            <h6>Uncategorized</h6>
+          </div>
+          <i class="far fa-list-alt fa-6x"></i>
+        </div>
+      </div>
+      
+      <div class="content-4 search topBorder marginLeft10 paddingTopBottom-20">
+        <p>From</p>
+        <i class="far fa-calendar-alt"><input id='fromDate' class="content-4-input" type="date"></i>
+        
+        <p>To</p>
+        <i class="far fa-calendar-alt"><input id='toDate' class="content-4-input" type="date"></i>
+
+        <p>Expense Category</p>
+        <div class="expense-dropdown">
+          <input id='expenseTypeDropdown' class="content-4-input" type="text" placeholder="Choose the Category"></input>
+          <i class="fas fa-chevron-down"></i>
+          <div class="expenseTypeDropdownList">
+          </div>
+        </div>
+
+        <div id="refresh" data-icon='refresh'><i class="fas fa-sync-alt"></i></div>
+        <div id="execute"><i class="fas fa-angle-double-right"></i></div>
+        
+      </div>
+      
+      <div class="content-5 topBorder marginLeft10 paddingAround-20 marginTop20">
+        <div class="content-5-header">
+          <!-- <p data-sort=''>ID <i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i> </p> -->
+          <p data-sort=''>Merchant<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p data-sort=''>Date<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p id="expenseDropdownHead" data-sort=''>Category<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p data-sort=''>Amount<i class="fas fa-long-arrow-alt-up"></i><i class="fas fa-long-arrow-alt-down"></i></p>
+          <p>Action</p>
+        </div>
+
+
+        <ul class="indexedDb">
+          <!-- <li class="content-5-header">
+            <p class="content-5-content">0</p>
+            <p class="content-5-content">ABC Restaurant</p>
+            <p class="content-5-content">09/01/2020</p>
+            <p class="content-5-content">Entered</p>
+            <p class="content-5-content">9.00</p> -->
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="./main.js" type="module"></script>
+  <script src="./indexedDB.js" type="module"></script>
+</body>
+</html>
+
+

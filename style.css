@@ -510,6 +510,7 @@ body {
 .content-5 .content-5-header {
   display: grid;
   grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+  /* height: px; */
 }
 
 /* .content-5 .content-5-header:hover {
@@ -521,11 +522,14 @@ body {
 }
 
 .content-5 .content-5-header p,
-.content-5 .content-5-header p + i {
+.content-5 .content-5-header p + i,
+.content-5 .content-5-header .needborder {
+  font-size: 0.8rem;
+  height: 20px;
   display: flex;
   align-content: center;
   justify-content: center;
-  padding: 10px 0 10px 0;
+  padding: 1px 0 0px 0;
   border: 1px solid #DCDCDC;
 } 
 

@@ -311,7 +311,7 @@ window.onload = function() {
         uncategorizedDiv.innerText = 'Uncategorized';
         expenseTypeDropdown.append(uncategorizedDiv);
           
-        //add expense drop down list to each status
+        //add expense drop down list to each category
         expenseLists.forEach(expenseList => {
           expenseListArr.forEach(expenseType => {
             let expenseListItem = document.createElement("li");
@@ -371,6 +371,17 @@ window.onload = function() {
             })
           })
         });
+        //pagination test
+        //persumebly all expense entries are all rendered at this point
+        //with all expense dropdowns appended 
+        // let expenseListItems = document.querySelectorAll('.indexedDb li[data-id]')
+        // console.log(expenseListItems.length)
+        // expenseListItems.forEach((listItem, index) => {
+        //   if (index > 20) {
+        //     listItem.style.display = 'none';
+        //   }
+
+        // })
       }
     }
   };

@@ -1,0 +1,335 @@
+@import 'utility.css';
+
+* {
+  box-sizing: border-box;
+  margin:0;
+  padding:0;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+body {
+  font-family: sans-serif;
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  background-color:#333; /* when scroll down a bit, top class removed, background color kick in*/
+  color:white;
+  opacity: 0.8;
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0px;
+  padding: 0 30px;
+  z-index: 10;
+  transition: 1s ease;
+}
+
+.navbar.top { /* when at very top background is transparent */
+  background: transparent;
+  transition: 0.5s ease;
+}
+
+.navbar a {
+  color:white;
+  padding: 10px 20px;
+  /* margin: 0 5px; */
+}
+
+.navbar nav ul li::after{
+  content:'';
+  margin:auto;
+  display: block;
+  height: 3px;
+  background: transparent;
+  width: 0px;
+  transition: 0.5s ease;
+  font-weight: bold; 
+}
+
+.navbar nav ul li:hover::after{
+  width: 70%;
+  background: var(--draggable-color);
+}
+
+
+.navbar ul {
+  display: flex;
+}
+
+.navbar .logo {
+  font-weight: 400;
+} 
+
+.hero {
+  height: 100vh;
+  position: relative;
+  color: white;
+}
+
+#myVideo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 100vw; 
+  min-height: 100vh;
+  
+}
+
+.text-primary {
+  color: var(--draggable-color);
+}
+
+/* overlay */
+.hero::before {
+  content: '';
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height:100%;
+  background: rgb(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+.hero .content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* transition: 0.5s all; */
+}
+
+.hero .content a i {
+  padding-right: 20px;
+}
+
+/* start button */
+.hero .content .btn {
+  position: relative;
+}
+
+.hero .content .btn span {
+  position: relative;
+  left: 13%;
+}
+
+.hero .content .btn .fas {
+  position: absolute;
+  left: 0px; /*left 0px is original place, 50px is destination*/
+  opacity: 0;
+}
+
+@keyframes moveRight {
+  from {left: 0px; opacity: 0;}
+  to {left: 80%; opacity: 1;}
+}
+
+.hero .content .btn span,
+.hero .content .btn i {
+  transition: 0.5s all;
+}
+
+.hero .content .btn:hover span{
+  color: transparent;
+}
+
+.hero .content a:hover .fas:nth-child(1) {
+  color: #fff;
+  animation: moveRight 1s infinite;
+}
+.hero .content a:hover .fas:nth-child(2) {
+  color: #fff;
+  animation: moveRight 1s infinite 0.2s;
+}
+.hero .content a:hover .fas:nth-child(3) {
+  color: #fff;
+  animation: moveRight 1s infinite 0.4s;
+}
+
+
+.hero .content h1,
+.hero .content p,
+.hero .content a {
+  z-index: 5;
+}
+
+.hero .content h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+#about .about-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 30px 30px 30px 30px;
+  background: var(--category-color-even);
+}
+
+#about .about-container > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-grow: 1;
+}
+
+
+/* #about .about-container > div:nth-child(2) {
+  margin-right: 50px;
+} */
+
+#about .about-container div div * {
+  padding: 10px;
+}
+
+#about .about-container div i {
+  color: #fff;
+  padding: 1rem;
+  border-radius: 50%;
+  background-color: var(--draggable-color);
+}
+
+.separator {
+  width: 100%;
+  border: 1px solid (--category-color-even);
+}
+
+#cases {
+  background: var(--category-color-even);
+}
+
+#cases .case-container {
+  max-width: 100%;
+  max-height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#cases .case-container .case {
+  padding:5px;
+}
+
+#cases .case-container .case img {
+  width: 100%;
+  min-height: 100%; 
+  object-fit: contain;
+}
+
+#cases .case-header {
+  padding: 20px;
+}
+
+#cases .case-header p {
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.footer {
+  background: #333;
+  width: 100%;
+  height: 100px;
+}
+
+.footer .social a,
+.footer p {
+  color: #fff;
+  transition: 0.5s all;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.footer .social {
+  display: flex;
+  justify-content: center;
+}
+
+.footer .social a i {
+  padding: 10px;
+}
+
+.footer .social a:hover {
+  color: var(--draggable-color);
+}
+
+
+/* Small Screen */
+.content .small-screen {
+  display: none;
+}
+
+@media(max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: 130px;
+    padding: 20px;
+  }
+
+  .hero .content > h1 > i {
+    font-size: 1.5rem;
+  }
+
+  #about .about-container {
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  #about .about-container > div {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 100%;
+    border-bottom: 1px dotted var(--draggable-color);
+  }
+  
+  #about .about-container > div:last-child {
+    border-bottom: none;
+  }
+
+  #cases .case-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media(max-width: 518px) {
+  /* .hero .content > h1 > i {
+    font-size: 1.5rem;
+  } */
+
+  .hero .content > .large-screen {
+    display: none;
+  }
+
+  .hero .content > .small-screen {
+    display: block;
+  }
+
+  #cases .case-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+}
