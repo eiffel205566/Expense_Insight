@@ -335,6 +335,7 @@ window.onload = function() {
             expenseLists[index].style.opacity = '1';
             expenseLists[index].style.pointerEvents  = 'all';
             
+            chevrons[index].parentElement.style.borderColor = "#4aae9b"
             
             expenseLists[index].addEventListener('mouseleave', function handleMouseleave(event) {
               expenseLists[index].removeEventListener('mouseleave', handleMouseleave);
@@ -342,6 +343,8 @@ window.onload = function() {
               expenseLists[index].style.zIndex = -1;
               expenseLists[index].style.opacity = '0';
               expenseLists[index].style.pointerEvents  = 'none';
+
+              chevrons[index].parentElement.style.borderColor = "#DCDCDC"
             })
             
             //process another transaction to handle click on expense type 

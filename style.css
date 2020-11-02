@@ -21,7 +21,7 @@ body {
 .header {
   width: 100%;
   text-align: center;
-  background: #4aae9b;
+  background-color: var(--draggable-color);
   height: 60px;
   opacity: 0.8;
   padding-top: 20px;
@@ -29,6 +29,15 @@ body {
   display: flex;
   justify-content: space-between;
   z-index:4;
+}
+
+.text-primary {
+  color: #333;
+}
+
+.header .logo {
+  padding-right: 45%;
+  color: #fff;
 }
 
 .innerselection {
@@ -533,6 +542,15 @@ body {
   border: 1px solid #DCDCDC;
 } 
 
+.content-5 .content-5-header p {
+  padding-top: 3px;
+}
+
+.content-5 .content-5-header .fas {
+  padding-top: 3px;
+  /* position: absolute; */
+}
+
 .content-5 .content-5-header p > i:hover,
 .indexedDb .content-5-header i:hover {
   cursor: pointer;
@@ -569,6 +587,7 @@ body {
 
 .indexedDb > .content-5-header > ul > .needborder {
   border: 1px solid #DCDCDC;
+  position: relative;
 }
 
 .indexedDb > .content-5-header > ul > .expenseList > li {
@@ -588,6 +607,12 @@ body {
 
 .indexedDb > li {
   display: block;
+}
+
+.indexedDb .fas.fa-chevron-down {
+  padding-top:3px;
+  position: absolute;
+  left:20px;
 }
 
 /* insight page */
@@ -619,6 +644,7 @@ body {
   border: 1px solid var(--category-color-odd);
   border-radius: 5px;
   background: #b2dad2;
+  /* background: #b2dad2; */
 }
 
 .metadata {
