@@ -113,6 +113,10 @@ body {
   /* transition: 0.5s all; */
 }
 
+.hero .content .tiny-screen {
+  display: none;
+}
+
 .hero .content a i {
   padding-right: 20px;
 }
@@ -327,9 +331,24 @@ body {
     display: block;
   }
 
+  .hero .content > .tiny-screen {
+    display: none;
+  }
+
   #cases .case-container {
     display: flex;
     flex-direction: column;
+  }
+
+}
+
+@media(max-width: 375px) {
+  .hero .content > .small-screen {
+    display: none;
+  }
+
+  .hero .content > .tiny-screen {
+    display: block;
   }
 
 }
