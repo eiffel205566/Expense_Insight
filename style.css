@@ -20,6 +20,8 @@ body {
 
 .header {
   width: 100%;
+  /* max-width: 100%; */
+
   text-align: center;
   background-color: var(--draggable-color);
   height: 60px;
@@ -167,9 +169,10 @@ body {
 .main {
   display: flex;
   flex-grow: 1;
-  margin-right: 20px;
-  max-width: 1400px;
   margin: auto;
+  /* margin-right: 10px !important; */
+  max-width: 1400px;
+  
 }
 
 .main::after {
@@ -551,6 +554,10 @@ body {
   /* position: absolute; */
 }
 
+.content-5 .fa-trash-alt {
+  padding-top: 4px !important;
+}
+
 .content-5 .content-5-header p > i:hover,
 .indexedDb .content-5-header i:hover {
   cursor: pointer;
@@ -639,11 +646,13 @@ body {
 
 .main.insight .metadata,
 .main.insight .insights {
-  width: 40vw;
+  width: 45vw;
   height: 80vh;
   border: 1px solid var(--category-color-odd);
   border-radius: 5px;
-  background: #b2dad2;
+  background: #c4dbd5;
+  position: relative;
+  /* flex-grow: 1; */
   /* background: #b2dad2; */
 }
 
@@ -844,22 +853,36 @@ back arrow formatting
   background:yellow;
 } */
 
+.insights .insightdataHeader {
+  color: var(--draggable-color);
+  text-align: center;
+  border-bottom: dotted 1px #333;
+  position: absolute;
+  width: 100%;
+}
+
 /*forward arrow*/
 .insights .graphUI {
   width: 80%;
   height: 70%;
   /* border: 1px solid red; */
   margin-left: 10%;
-  display: flex;
-  justify-content: center;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  
+  /* display: flex;
+  flex-direction: row;
+  justify-content: center; */
   /* align-items: center; */
 }
 
 .insights .graphUI .barContainer,
-.insights .graphUI .pieContainer {
+.insights .graphUI .pieContainer,
+.insights .graphUI .monthToMonthContainer {
   border: 1px solid var(--category-color-odd);
   border-radius: 5px;
-  max-height: 50%;
+  height: 200px;
   flex-grow: 1;
   margin: 5px;
   transition: 0.5s all;
@@ -870,7 +893,8 @@ back arrow formatting
 }
 
 .insights .graphUI .barContainer:hover,
-.insights .graphUI .pieContainer:hover {
+.insights .graphUI .pieContainer:hover,
+.insights .graphUI .monthToMonthContainer:hover {
   /* box-shadow: 1px 1px 2px 2px var(--category-color-odd); */
   box-shadow: 0 0 0 1px var(--category-color-odd);
   top:-2px;
@@ -878,7 +902,8 @@ back arrow formatting
 }
 
 .insights .graphUI .barContainer i, 
-.insights .graphUI .pieContainer i {
+.insights .graphUI .pieContainer i,
+.insights .graphUI .monthToMonthContainer  i {
   color: var(--draggable-color);
 }
 

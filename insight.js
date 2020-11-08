@@ -390,6 +390,10 @@ let chartContainer = document.querySelector('.chartContainer');
 let graphUI = document.querySelector('.graphUI');
 let barContainer = document.querySelector('.graphUI .barContainer')
 let pieContainer = document.querySelector('.graphUI .pieContainer')
+
+//Month to Month
+let monthContainer = document.querySelector('.graphUI .monthToMonthContainer')
+
 let uiDetail = document.querySelector('.uiDetail');
 let backArrow = document.querySelector('.arrowContainer')
 let basisOptions = document.querySelector('#basisOptionContainer')
@@ -402,9 +406,10 @@ let basisOptionSelection = document.querySelector('#basisOptions');
 function resetInsightUI() {
   chartContainer.style.display = '';
   uiDetail.style.display = '';
-  graphUI.style.display = 'flex';
+  graphUI.style.display = 'grid';
   barContainer.style.display = 'block';
   pieContainer.style.display = 'block';
+  monthContainer.style.display = 'block';
   insightFromDate.value = '';
   insightToDate.value = '';
   basisOptions.style.display = '';
@@ -420,9 +425,15 @@ function resetInsightUI() {
 backArrow.addEventListener('click', () => resetInsightUI());
 barContainer.addEventListener('click', (event) => renderGraphBuilder(event));
 pieContainer.addEventListener('click', (event) => renderGraphBuilder(event));
-basisOptionSelection.addEventListener('input', () => {
+
+monthContainer.addEventListener('click', (event) => renderGraphBuilder(event));
+
+basisOptionSelection.addEventListener('change', () => {
+
   if (basisOptionSelection.value !== 'none') {
     bottomArrow.style.display = 'block'
+  } else {
+    bottomArrow.style.display = "none";
   }
 });
 
@@ -458,14 +469,22 @@ insightToDate.oninput = () => {
 };
 
 function renderGraphBuilder(event) {
-  barContainer.style.display = 'none'
-  pieContainer.style.display = 'none'
+  barContainer.style.display = 'none';
+  pieContainer.style.display = 'none';
+  monthContainer.style.display = 'none';
   if (barContainer.contains(event.target)) {
     bottomArrow.setAttribute('data-chartType', 'bar')
   }
   if (pieContainer.contains(event.target)) {
     bottomArrow.setAttribute('data-chartType', 'pie')
   }
+  
+  //add month to month here?
+  if (monthContainer.contains(event.target)) {
+    bottomArrow.setAttribute('data-chartType', 'month')
+  }
+  
+  graphUI.style.display = 'flex';
   uiDetail.style.display = 'block';
 }
 
@@ -495,9 +514,3 @@ bottomArrow.addEventListener("click", () => {
 })
 
 //### --- Graph Design UI Section --- ###
-
-
-
-
-
-

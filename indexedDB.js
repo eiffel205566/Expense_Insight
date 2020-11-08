@@ -406,6 +406,6 @@ window.onload = function() {
       console.log(`Transaction with ${id} had been deleted`)
     }
 
-    displayData();
+    // displayData();
   }
 }

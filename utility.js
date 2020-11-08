@@ -123,7 +123,7 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
           },
       }
     });
-  } else { //pie chart
+  } else if (chartType == 'pie') { //pie chart
 
     let options = {
       title: {
@@ -156,6 +156,114 @@ export function renderChart(chartType, base, time, allData, expenseTypeList, mer
       options: options
     });
   }
+
+  else if (chartType == 'month') {
+    console.log('WIP month to month chart');
+    // console.log(summaryObj);
+    // console.log(time);
+    // console.log(allData);
+    //get month labels by looking at time array (done)
+    //reset summaryObj by setting all values to 0 
+    //from month labels, derive month range for each month label (no need)
+    //iterate allData and produce n number of summaryObj where each obj
+    //represent summarized data for that month
+    let startYearMonth = time[0].slice(0,7);
+    let endYearMonth = time[1].slice(0,7);
+    let dateLabels = getMonthLabels(startYearMonth, endYearMonth);
+
+    console.log(dateLabels);
+    
+    //result will be array with all required x-axis labels
+    function getMonthLabels(startDate, endDate) {
+      let resultDateLabels = new Array();
+
+      while (startDate !== endDate) {
+        resultDateLabels.push(startDate)
+
+        if (startDate.slice(5,7) !== '12') {
+          let nextMonth = +startDate.slice(5, 7) + 1
+          nextMonth = nextMonth >= 10 ? nextMonth.toString() : "0" + nextMonth.toString();  
+          startDate = startDate.slice(0, 5) + nextMonth
+        } else {
+          startDate = (+startDate.slice(0, 4) + 1).toString() + "-01"
+        }
+      }
+
+      resultDateLabels.push(startDate) //the last one
+      return resultDateLabels;
+    }
+
+    //resetting summaryObj;
+    for (let key in summaryObj) {
+      summaryObj[key] = 0;
+    }
+
+    // let summaryObjArrays = dateLabels.map(dataLabel => )
+    //get n number copies of summaryObj
+    let monthSummaryObj = dateLabels.reduce((prev, curr) => {
+      return {...prev, [curr]:Object.assign({}, summaryObj)} 
+    }, {})
+
+
+    let propertyName = base == 'Expense Type' ? 'status' : 'merchant';
+
+    // console.log(monthSummaryObj);
+
+    for (let transaction of allData) {
+      let transactionMonth = transaction['date'].slice(0,7);
+
+      summaryObj[transaction[propertyName]] += +transaction['amount']
+
+      //fix decimal places
+      if (monthSummaryObj[transactionMonth]) { //error handle for the propertyName not in the month
+        monthSummaryObj[transactionMonth][transaction[propertyName]] += +transaction['amount'];
+        monthSummaryObj[transactionMonth][transaction[propertyName]] = parseFloat(monthSummaryObj[transactionMonth][transaction[propertyName]].toFixed(2));
+      }
+
+    }
+
+
+
+    let dataLables = Object.keys(summaryObj); 
+
+    let dataSetsArr = Object.entries(monthSummaryObj).map(entry => { //entry: [key, value] 
+      return {
+        label: entry[0],
+        backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`,
+        data: Array.from(Object.values(monthSummaryObj[entry[0]]))
+      }
+    })
+    
+    let data = {
+      labels: dataLables,
+      datasets: dataSetsArr
+    }
+    
+    
+    // console.log(monthSummaryObj);
+    // console.log(data)
+    chart =  new Chart(myChart, {
+      type: 'bar',
+      data: data,
+      options: {
+          barValueSpacing: 5,
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      min: 0,
+                    }
+                }]
+            }
+        }
+    });
+
+  }
+
+  else {
+    console.log('no chart type')
+    return;
+  }
+
   return chart;
 }
 
@@ -166,7 +274,7 @@ export function getRandomColors(n) {
     let g = Math.floor(Math.random() * 255)
     let b = Math.floor(Math.random() * 255)
 
-    return `rgba(${r}, ${g}, ${b}, 0.2)`
+    return `rgba(${r}, ${g}, ${b}, 0.5)`
   }
   return result.map(x => getRandomColor())
 }
