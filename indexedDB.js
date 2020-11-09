@@ -3,7 +3,8 @@
 // window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction;
 // window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange
 
-import { whiteCharHandler } from './utility.js';
+// import { resolve } from 'path';
+import { openDB, whiteCharHandler } from './utility.js';
 
 let elementEntrySubmit = document.querySelector('#value-submit'); //dynamic update
 let elementEntryDone= document.querySelector('#value-done');
@@ -409,3 +410,80 @@ window.onload = function() {
     // displayData();
   }
 }
+
+//add functionality to load sample data
+let linkToLoadSampleData = document.querySelector('#sampleData')
+
+linkToLoadSampleData.addEventListener('click', () => {
+
+  //add transaction fake data
+  openDB().then(db => {
+    return new Promise((resolve, reject) => {
+      let transaction = db.transaction(['expense_mt'], 'readwrite');
+      let objectStore = transaction.objectStore('expense_mt');
+      let fakeTypes = [
+        {type: 'expenseType1'},
+        {type: 'expenseType2'},
+        {type: 'expenseType3'},
+        {type: 'expenseType4'}
+      ];
+      
+      fakeTypes.forEach(fakeType => {
+        let request = objectStore.add(fakeType);
+        request.onsuccess = () => {}
+      });
+
+      transaction.oncomplete = () => {}
+
+      resolve(db);
+    }).then(db => {
+
+      let transaction = db.transaction(['expense_os'], 'readwrite');
+      let objectStore = transaction.objectStore('expense_os');
+      let fakeInfo1 = { merchant: 'sampleMerc1', date: '2020-11-01', status: "Uncategorized", amount: 10.01 }
+      let fakeInfo2 = { merchant: 'sampleMerc2', date: '2020-11-02', status: "Uncategorized", amount: 21.02 }
+      let fakeInfo3 = { merchant: 'sampleMerc3', date: '2020-11-03', status: "Uncategorized", amount: 32.03 }
+      let fakeInfo4 = { merchant: 'sampleMerc4', date: '2020-11-04', status: "Uncategorized", amount: 43.04 }
+      let fakeInfo5 = { merchant: 'sampleMerc5', date: '2020-11-05', status: "Uncategorized", amount: 54.05 }
+      let fakeInfo6 = { merchant: 'sampleMerc6', date: '2020-11-06', status: "Uncategorized", amount: 65.06 }
+      let fakeInfo7 = { merchant: 'sampleMerc7', date: '2020-11-07', status: "Uncategorized", amount: 102.07 }
+      
+      let fakeDataSets = [fakeInfo1, fakeInfo2, fakeInfo3, fakeInfo4, fakeInfo5, fakeInfo6, fakeInfo7];
+
+      fakeDataSets.forEach(fakeData => {
+        let request = objectStore.add(fakeData)
+        request.onsuccess = () => {}
+      });
+
+      transaction.oncomplete = () => {
+      };
+
+      resolve('fake added')
+    })
+  }).then(console.log)
+})
+
+// async function addSampleData() {
+//   let db = await openDB();
+//   let transaction = await db.transaction(['expense_mt'], 'readwrite');
+//   let objectStore = await transaction.objectStore('expense_mt');
+//   let fakeTypes = [
+//     {type: 'expenseType1'},
+//     {type: 'expenseType2'},
+//     {type: 'expenseType3'},
+//     {type: 'expenseType4'}
+//   ];
+
+//   fakeTypes.forEach(fakeType => {
+//     let request = objectStore.add(fakeType);
+//     request.oncomplete = () => console.log('add')
+//   });
+
+//   transaction.oncomplete = () => console.log('complete')
+//   return db;
+// }
+
+
+// linkToLoadSampleData.addEventListener('click', () => {
+//   addSampleData();
+// })
