@@ -1,20 +1,18 @@
-@media (max-width:1200px) {
-
+@media (max-width: 1200px) {
   .content-2,
   .content-3,
   .content-4,
   .content-5 {
     margin-right: 10px !important;
   }
-
 }
 
-@media (max-width:1124px) {
+@media (max-width: 1124px) {
   .content-4 {
     flex-direction: column;
   }
 
-  .content-4 > p, 
+  .content-4 > p,
   .content-4 > i,
   .content-4 > .expense-dropdown {
     padding-bottom: 10px;
@@ -48,8 +46,7 @@
   }
 }
 
-@media (max-width:954px) {
-
+@media (max-width: 954px) {
   .content-3 {
     flex-direction: column;
     margin-right: 10px;
@@ -61,12 +58,53 @@
 
   .content-3 > div:nth-child(2),
   .content-3 > div:nth-child(3) {
-    margin-left:0px;
+    margin-left: 0px;
   }
-  
 }
 
-@media (max-width:320px) {
+@media (max-width: 568px) {
+  .main .content {
+    width: 100%;
+  }
+
+  .main .content .content-1 {
+    width: 100vw;
+  }
+
+  .main .content .content-3 {
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .main .content .content-3 > div {
+    width: 100%;
+    margin-right: 10px !important;
+  }
+
+  .main .content .content-2,
+  .main .content .content-3,
+  .main .content .content-4,
+  .main .content .content-5 {
+    width: 100vw;
+    margin-right: 10px;
+  }
+
+  .main .content .content-2 {
+    display: none;
+  }
+
+  .main .content .content-4 {
+    display: none;
+  }
+
+  .main .content .content-5 {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
   .header .logo {
     padding-right: 10px;
   }
@@ -77,7 +115,6 @@
 
   .content-2 {
     width: 95vw;
-    
   }
 
   .content-2 .content-2-input {
@@ -95,7 +132,7 @@
   .content-2 .content-2-input .input-section input {
     max-width: 220px;
     margin-top: 10px;
-    margin-left:0 !important;
+    margin-left: 0 !important;
   }
 
   .content-2 .content-2-input .input-section .fas.fa-edit {
@@ -130,23 +167,21 @@
 
   .content-5 .content-5-header p,
   .content-5 .indexedDb li > p,
-  .content-5 .indexedDb li > ul .needborder{
+  .content-5 .indexedDb li > ul .needborder {
     height: 50px;
   }
 
   .content-5 > .content-5-header {
     /* grid-template-columns: 2fr 2fr 2fr 2fr 1fr; */
-    grid-template-columns: 2fr 2fr 3fr 2fr 1fr !important; 
-    
+    grid-template-columns: 2fr 2fr 3fr 2fr 1fr !important;
   }
   .content-5 > .content-5-header > p {
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
   }
 
   .content-5 .indexedDb li {
     display: grid;
-    grid-template-columns: 2fr 2fr 3fr 2fr 1fr !important; 
+    grid-template-columns: 2fr 2fr 3fr 2fr 1fr !important;
   }
-
 }
