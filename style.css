@@ -183,7 +183,7 @@ body {
   background: rgb(51, 51, 51);
   opacity: 0.8;
   z-index: 3;
-  transition: all 0.5s ease;
+  /* transition: all 0.5s ease; */
 }
 
 .main.open::after {
